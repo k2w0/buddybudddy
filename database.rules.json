@@ -75,6 +75,18 @@
       }
     },
 
+    "public_board": {
+      ".read": "auth != null",
+      "$postId": {
+        ".write": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && ((!data.exists() && newData.child('authorId').val() === root.child('owners_by_uid/' + auth.uid).val()) || (data.exists() && data.child('authorId').val() === root.child('owners_by_uid/' + auth.uid).val() && (!newData.exists() || newData.child('authorId').val() === data.child('authorId').val())))",
+        ".validate": "!newData.exists() || (newData.child('authorId').isString() && newData.child('authorName').isString() && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 100 && newData.child('content').isString() && newData.child('content').val().length <= 1000000 && newData.child('timestamp').isNumber())",
+        "scrapCount": {
+          ".write": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && root.child('public_board/' + $postId + '/authorId').exists()",
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= (data.exists() ? data.val() : 0) + 1"
+        }
+      }
+    },
+
     "minihompy": {
       "$id": {
         ".read": "auth != null",
