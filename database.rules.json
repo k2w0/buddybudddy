@@ -1,0 +1,103 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "id_owners": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid && !root.child('owners_by_uid/' + auth.uid).exists() && ((root.child('legacy_passwords/' + $id).exists() && newData.parent().parent().child('migration_proofs/' + $id).val() === root.child('legacy_passwords/' + $id).val()) || (!root.child('legacy_passwords/' + $id).exists() && !root.child('global_users/' + $id).exists() && newData.parent().parent().child('global_users/' + $id + '/nickname').isString()))) || (data.val() === auth.uid && !newData.exists()))"
+      }
+    },
+
+    "owners_by_uid": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && ((!data.exists() && newData.isString() && newData.parent().parent().child('id_owners/' + newData.val()).val() === auth.uid) || !newData.exists())"
+      }
+    },
+
+    "legacy_passwords": {
+      "$id": {
+        ".write": "auth != null && !newData.exists() && root.child('id_owners/' + $id).val() === auth.uid"
+      }
+    },
+
+    "migration_proofs": {
+      "$id": {
+        ".write": "auth != null && ((!data.exists() && newData.isString() && newData.parent().parent().child('id_owners/' + $id).val() === auth.uid) || (!newData.exists() && root.child('id_owners/' + $id).val() === auth.uid))"
+      }
+    },
+
+    "global_users": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && (root.child('id_owners/' + $id).val() === auth.uid || newData.parent().parent().child('id_owners/' + $id).val() === auth.uid)",
+        ".validate": "!newData.exists() || newData.child('nickname').isString()",
+        "password": { ".validate": false },
+        "userId": { ".validate": "newData.val() === $id" },
+        "nickname": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
+        "status": { ".validate": "newData.val() === 'online' || newData.val() === 'away' || newData.val() === 'offline'" }
+      }
+    },
+
+    "user_friends": {
+      "$owner": {
+        ".read": "auth != null",
+        ".write": "auth != null && !newData.exists() && root.child('id_owners/' + $owner).val() === auth.uid",
+        "$friend": {
+          ".write": "auth != null && (root.child('id_owners/' + $owner).val() === auth.uid || (root.child('id_owners/' + $friend).val() === auth.uid && (!newData.exists() || root.child('friend_requests/' + $friend + '/' + $owner).exists())))",
+          ".validate": "newData.val() === true"
+        }
+      }
+    },
+
+    "friend_requests": {
+      "$target": {
+        ".read": "auth != null && root.child('id_owners/' + $target).val() === auth.uid",
+        ".write": "auth != null && !newData.exists() && root.child('id_owners/' + $target).val() === auth.uid",
+        "$from": {
+          ".write": "auth != null && ((root.child('id_owners/' + $from).val() === auth.uid && $from !== $target && root.child('global_users/' + $target).exists()) || (root.child('id_owners/' + $target).val() === auth.uid && !newData.exists()))",
+          ".validate": "!newData.exists() || (newData.child('fromId').val() === $from && newData.child('fromNickname').isString())"
+        }
+      }
+    },
+
+    "rooms": {
+      "$room": {
+        ".read": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && ($room.beginsWith(root.child('owners_by_uid/' + auth.uid).val() + '_room_') || $room.endsWith('_room_' + root.child('owners_by_uid/' + auth.uid).val()))",
+        ".write": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && ($room.beginsWith(root.child('owners_by_uid/' + auth.uid).val() + '_room_') || $room.endsWith('_room_' + root.child('owners_by_uid/' + auth.uid).val()))",
+        "messages": {
+          "$msg": {
+            ".validate": "!newData.exists() || (newData.child('senderId').val() === root.child('owners_by_uid/' + auth.uid).val() && newData.child('text').isString() && newData.child('text').val().length <= 2000)"
+          }
+        }
+      }
+    },
+
+    "minihompy": {
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null && !newData.exists() && root.child('id_owners/' + $id).val() === auth.uid",
+        "data": {
+          "$key": {
+            ".write": "auth != null && root.child('id_owners/' + $id).val() === auth.uid",
+            ".validate": "newData.isString()"
+          }
+        },
+        "photos": {
+          "$photoId": {
+            ".write": "auth != null && root.child('id_owners/' + $id).val() === auth.uid",
+            ".validate": "newData.isString() && newData.val().length < 1500000"
+          }
+        },
+        "guestbook": {
+          "$entryId": {
+            ".write": "auth != null && (root.child('id_owners/' + $id).val() === auth.uid || (!data.exists() && newData.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val()) || (data.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val() && !newData.exists()))",
+            ".validate": "!newData.exists() || (newData.child('content').isString() && newData.child('content').val().length <= 1000 && newData.child('timestamp').isNumber())"
+          }
+        }
+      }
+    }
+  }
+}

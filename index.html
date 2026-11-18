@@ -1004,6 +1004,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 
 <body>
@@ -1340,7 +1341,7 @@
       </div>
       <div class="modal-footer" style="justify-content: flex-end; gap: 6px;">
         <button class="win98-btn" id="add-friend-modal-btn" onclick="confirmAddFriendFromModal()">친구추가</button>
-        <button class="win98-btn">홈피가기</button>
+        <button class="win98-btn" onclick="openMiniHompy(searchedFriendName)">홈피가기</button>
         <button class="win98-btn" onclick="closeFriendInfoModal()">닫기</button>
       </div>
     </div>
@@ -1443,6 +1444,73 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    const auth = firebase.auth();
+
+    // 미니홈피 주소 (웹용 홈피 저장소의 GitHub Pages 주소)
+    const HOMPY_BASE_URL = 'https://k2w0.github.io/buddybudddy-home/';
+
+    /* ===== 로그인 (Firebase Authentication) =====
+       - 화면에서는 지금처럼 "아이디 + 비밀번호"만 입력해요.
+       - Firebase에는 아이디를 이메일 모양으로 바꿔서 보내요. (진짜 메일은 보내지 않아요)
+       - 비밀번호는 Firebase가 따로 보관하고, 우리 데이터베이스에는 저장하지 않아요. */
+    const AUTH_EMAIL_DOMAIN = 'buddybuddy.app';
+
+    function idToEmail(id) {
+      const clean = String(id).trim();
+      if (/^[A-Za-z0-9._-]+$/.test(clean)) {
+        return clean.toLowerCase() + '@' + AUTH_EMAIL_DOMAIN;
+      }
+      // 한글 등 영문이 아닌 아이디는 글자 코드로 바꿔서 사용
+      const hex = Array.from(new TextEncoder().encode(clean)).map(b => b.toString(16).padStart(2, '0')).join('');
+      return 'u-' + hex + '@' + AUTH_EMAIL_DOMAIN;
+    }
+
+    // Firebase는 비밀번호가 6자 이상이어야 해서, 앞에 고정 글자를 붙여 4자리 비밀번호도 쓸 수 있게 해요.
+    function toAuthPassword(pw) {
+      return 'bb#' + pw;
+    }
+
+    function isWrongLoginError(err) {
+      return err && ['auth/user-not-found', 'auth/wrong-password', 'auth/invalid-credential',
+        'auth/invalid-login-credentials', 'auth/invalid-email'].includes(err.code);
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function openMiniHompy(userId) {
+      if (!userId) return;
+      const url = HOMPY_BASE_URL + '?uid=' + encodeURIComponent(userId);
+      window.open(url, 'minihompy_' + userId, 'width=1180,height=760,resizable=yes,scrollbars=yes');
+    }
+
+    // 사진을 작게 줄여서 데이터 사용량을 아껴요.
+    function compressImageFile(file, maxSide, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
     let myUserId = "";
     let myNickname = "";
@@ -1482,39 +1550,60 @@
     }
 
     // 자동 로그인 및 상태 복원
+    let isAuthFlowBusy = false;   // 가입/계정 이전 중에는 자동 처리를 잠시 멈춰요.
+
     window.addEventListener('DOMContentLoaded', () => {
-      initAutoLogin();
+      auth.onAuthStateChanged((user) => {
+        if (isAuthFlowBusy) return;
+        handleSignedInUser(user);
+      });
     });
 
-    function initAutoLogin() {
-      const savedUserId = localStorage.getItem('buddy_saved_user_id');
-      const savedStatus = localStorage.getItem('buddy_saved_status');
+    async function handleSignedInUser(user) {
+      if (!user) {
+        if (!myUserId) showLoginScreen();
+        return;
+      }
+      // 이미 지워졌거나 바뀐 계정에 대한 늦은 알림은 무시
+      if (!auth.currentUser || auth.currentUser.uid !== user.uid) return;
+      if (myUserId && document.getElementById('main-messenger-screen').style.display === 'flex') return;
+      try {
+        const idSnap = await database.ref('owners_by_uid/' + user.uid).once('value');
+        const userId = idSnap.val();
+        if (!userId) {
+          // 가입이 끝나지 않은 계정이면 로그아웃
+          await auth.signOut();
+          showLoginScreen();
+          return;
+        }
+        const userSnap = await database.ref('global_users/' + userId).once('value');
+        const userData = userSnap.val();
+        if (!userData) {
+          await auth.signOut();
+          showLoginScreen();
+          showWin98Toast('계정 정보를 찾을 수 없습니다. 다시 가입해 주세요.');
+          return;
+        }
 
-      if (savedUserId) {
-        database.ref('global_users/' + savedUserId).once('value', (snapshot) => {
-          const userData = snapshot.val();
-          if (userData && snapshot.exists()) {
-            myUserId = savedUserId;
-            myNickname = userData.nickname || savedUserId;
-            myProfile = userData.profile ? userData.profile : getDefaultProfile();
+        myUserId = userId;
+        myNickname = userData.nickname || userId;
+        myProfile = userData.profile ? userData.profile : getDefaultProfile();
 
-            if (savedStatus) {
-              myStatus = savedStatus;
-            } else if (userData.status && userData.status !== 'offline') {
-              myStatus = userData.status;
-            } else {
-              myStatus = "online";
-            }
-
-            enterMainMessenger();
-          } else {
-            localStorage.removeItem('buddy_saved_user_id');
-            localStorage.removeItem('buddy_saved_status');
-            showLoginScreen();
-          }
-        });
-      } else {
+        const savedStatus = localStorage.getItem('buddy_saved_status');
+        if (savedStatus) {
+          myStatus = savedStatus;
+        } else if (userData.status && userData.status !== 'offline') {
+          myStatus = userData.status;
+        } else {
+          myStatus = "online";
+        }
+        localStorage.setItem('buddy_saved_status', myStatus);
+        enterMainMessenger();
+      } catch (err) {
+        console.error(err);
+        if (!auth.currentUser || auth.currentUser.uid !== user.uid) return;
         showLoginScreen();
+        showWin98Toast('로그인 정보를 불러오지 못했습니다: ' + err.message);
       }
     }
 
@@ -1532,36 +1621,81 @@
         showWin98Toast('이용자 ID와 비밀번호를 모두 입력해주세요!');
         return;
       }
-
-      database.ref('global_users/' + inputId).once('value', (snapshot) => {
-        const userData = snapshot.val();
-        if (userData && snapshot.exists()) {
-          if (userData.password && userData.password !== inputPw) {
-            showWin98Toast('비밀번호가 일치하지 않습니다.');
-            return;
-          }
-
-          myUserId = inputId;
-          myNickname = userData.nickname || inputId;
-          myProfile = userData.profile ? userData.profile : getDefaultProfile();
-
-          const savedStatus = localStorage.getItem('buddy_saved_status');
-          if (savedStatus) {
-            myStatus = savedStatus;
-          } else if (userData.status && userData.status !== 'offline') {
-            myStatus = userData.status;
-          } else {
-            myStatus = "online";
-          }
-
-          localStorage.setItem('buddy_saved_user_id', myUserId);
-          localStorage.setItem('buddy_saved_status', myStatus);
-          enterMainMessenger();
-        } else {
-          showWin98Toast('존재하지 않거나 탈퇴된 계정입니다. 신규가입 후 이용해주세요.');
-        }
-      });
+      loginWithId(inputId, inputPw);
     });
+
+    document.getElementById('room-code-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
+
+    async function loginWithId(inputId, inputPw) {
+      const loginBtn = document.getElementById('login-btn');
+      loginBtn.disabled = true;
+      try {
+        await auth.signInWithEmailAndPassword(idToEmail(inputId), toAuthPassword(inputPw));
+        // 나머지는 onAuthStateChanged → handleSignedInUser 가 처리
+      } catch (err) {
+        if (!isWrongLoginError(err)) {
+          showWin98Toast('로그인 중 오류가 발생했습니다: ' + err.message);
+        } else {
+          // 새 로그인 방식으로 아직 옮기지 않은 기존 계정일 수 있어요.
+          const result = await migrateLegacyAccount(inputId, inputPw);
+          if (result === 'migrated') {
+            showWin98Toast('새 로그인 방식으로 계정을 옮겼습니다. 다음부터는 그대로 로그인하면 돼요!');
+          } else if (result === 'error') {
+            showWin98Toast('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+          } else {
+            showWin98Toast('아이디 또는 비밀번호가 맞지 않습니다.');
+          }
+        }
+      } finally {
+        loginBtn.disabled = false;
+      }
+    }
+
+    /* 기존 계정 자동 이전
+       1) 같은 아이디로 Firebase 계정을 새로 만들고
+       2) 데이터베이스 규칙이 "옛 비밀번호와 같은지" 확인해서 맞을 때만 아이디를 연결해요.
+          (옛 비밀번호는 아무도 읽을 수 없고, 규칙만 비교할 수 있어요)
+       3) 틀리면 방금 만든 Firebase 계정을 지워요. */
+    async function migrateLegacyAccount(inputId, inputPw) {
+      let createdUser = null;
+      isAuthFlowBusy = true;
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(idToEmail(inputId), toAuthPassword(inputPw));
+        createdUser = cred.user;
+      } catch (err) {
+        isAuthFlowBusy = false;
+        // 이미 새 방식 계정이 있다 = 비밀번호가 틀린 것
+        return (err.code === 'auth/email-already-in-use' || err.code === 'auth/weak-password') ? 'wrong' : 'error';
+      }
+
+      try {
+        await database.ref().update({
+          ['id_owners/' + inputId]: createdUser.uid,
+          ['owners_by_uid/' + createdUser.uid]: inputId,
+          ['migration_proofs/' + inputId]: inputPw
+        });
+      } catch (err) {
+        // 옛 비밀번호가 틀렸거나 없는 아이디
+        try { await createdUser.delete(); } catch (e) { await auth.signOut(); }
+        isAuthFlowBusy = false;
+        return 'wrong';
+      }
+
+      // 이전 성공: 옛 비밀번호 흔적 지우기
+      try {
+        await database.ref().update({
+          ['legacy_passwords/' + inputId]: null,
+          ['migration_proofs/' + inputId]: null
+        });
+      } catch (err) {
+        console.warn('옛 비밀번호 정리 실패', err);
+      }
+      isAuthFlowBusy = false;
+      await handleSignedInUser(createdUser);
+      return 'migrated';
+    }
 
     function enterMainMessenger() {
       document.getElementById('login-screen').style.display = 'none';
@@ -1611,17 +1745,23 @@
       document.getElementById('friend-request-dialog-overlay').style.display = 'none';
     }
 
-    // 친구 요청 수락
+    // 친구 요청 수락 (양쪽 친구 등록 + 요청 삭제를 한 번에)
     function acceptFriendRequest() {
       if (currentPendingReq && myUserId) {
-        const fromId = currentPendingReq.fromId;
-
-        database.ref(`user_friends/${myUserId}/${fromId}`).set(true);
-        database.ref(`user_friends/${fromId}/${myUserId}`).set(true);
-
-        database.ref(`friend_requests/${myUserId}/${currentPendingReq.key}`).remove();
+        const req = currentPendingReq;
+        const fromId = req.fromId;
+        database.ref().update({
+          [`user_friends/${myUserId}/${fromId}`]: true,
+          [`user_friends/${fromId}/${myUserId}`]: true,
+          [`friend_requests/${myUserId}/${req.key}`]: null
+        }).then(() => {
+          showWin98Toast(`${req.fromNickname} 님과 서로 친구가 되었습니다!`);
+        }).catch(() => {
+          // 예전 방식으로 저장된 요청은 수락할 수 없어서 정리만 해요.
+          database.ref(`friend_requests/${myUserId}/${req.key}`).remove();
+          showWin98Toast('오래된 친구 요청이라 수락하지 못했습니다. 상대에게 다시 요청해 달라고 해 주세요.');
+        });
         closeFriendRequestDialog();
-        showWin98Toast(`${currentPendingReq.fromNickname} 님과 서로 친구가 되었습니다!`);
       }
     }
 
@@ -1636,24 +1776,32 @@
     // 로그아웃
     function logout() {
       if (myUserId) {
+        database.ref('global_users/' + myUserId + '/status').onDisconnect().cancel();
         database.ref('global_users/' + myUserId).update({ status: 'offline' });
         database.ref('friend_requests/' + myUserId).off();
         database.ref('user_friends/' + myUserId).off();
+        database.ref('global_users').off();
+      }
+      if (roomRef) {
+        roomRef.child('messages').off();
+        roomRef = null;
       }
 
-      localStorage.removeItem('buddy_saved_user_id');
       localStorage.removeItem('buddy_saved_status');
 
       myUserId = "";
       myNickname = "";
       myStatus = "online";
       myProfile = getDefaultProfile();
+      cachedGlobalUsers = {};
+      cachedFriendIds = [];
 
       document.getElementById('chat-screen').style.display = 'none';
       document.getElementById('buddy-phone-screen').style.display = 'none';
       document.getElementById('user-id-input').value = '';
       document.getElementById('room-code-input').value = '';
 
+      auth.signOut();
       showLoginScreen();
       hideContextMenu();
       showWin98Toast('정상적으로 로그아웃 되었습니다.');
@@ -1668,7 +1816,7 @@
       document.getElementById('signup-modal-overlay').style.display = 'none';
     }
 
-    function submitSignup() {
+    async function submitSignup() {
       const signupId = document.getElementById('signup-id-input').value.trim();
       const signupNick = document.getElementById('signup-nickname-input').value.trim();
       const signupPw = document.getElementById('signup-pw-input').value.trim();
@@ -1677,30 +1825,53 @@
         showWin98Toast('아이디, 닉네임, 비밀번호를 모두 입력해주세요!');
         return;
       }
+      if (!/^[A-Za-z0-9_]{2,20}$/.test(signupId)) {
+        showWin98Toast('아이디는 영문/숫자/밑줄(_)로 2~20자까지 쓸 수 있어요.');
+        return;
+      }
+      if (signupPw.length < 4) {
+        showWin98Toast('비밀번호는 최소 4자리 이상이어야 합니다.');
+        return;
+      }
 
-      database.ref('global_users/' + signupId).once('value', (snapshot) => {
-        if (snapshot.exists()) {
+      isAuthFlowBusy = true;
+      let createdUser = null;
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(idToEmail(signupId), toAuthPassword(signupPw));
+        createdUser = cred.user;
+      } catch (err) {
+        isAuthFlowBusy = false;
+        if (err.code === 'auth/email-already-in-use') {
           showWin98Toast('이미 가입된 사용자입니다. 다른 아이디를 사용해 주세요.');
         } else {
-          myUserId = signupId;
-          myNickname = signupNick;
-          myStatus = 'online';
-          myProfile = getDefaultProfile();
+          showWin98Toast('가입 중 오류가 발생했습니다: ' + err.message);
+        }
+        return;
+      }
 
-          database.ref('global_users/' + signupId).set({
+      try {
+        await database.ref().update({
+          ['id_owners/' + signupId]: createdUser.uid,
+          ['owners_by_uid/' + createdUser.uid]: signupId,
+          ['global_users/' + signupId]: {
             userId: signupId,
             nickname: signupNick,
-            password: signupPw,
-            status: myStatus,
-            profile: myProfile
-          }).then(() => {
-            localStorage.setItem('buddy_saved_user_id', myUserId);
-            localStorage.setItem('buddy_saved_status', myStatus);
-            closeSignupModal();
-            enterMainMessenger();
-          });
-        }
-      });
+            status: 'online',
+            profile: getDefaultProfile()
+          }
+        });
+      } catch (err) {
+        // 이미 있는 아이디(예전 방식 계정 포함)
+        try { await createdUser.delete(); } catch (e) { await auth.signOut(); }
+        isAuthFlowBusy = false;
+        showWin98Toast('이미 가입된 사용자입니다. 다른 아이디를 사용해 주세요.');
+        return;
+      }
+
+      isAuthFlowBusy = false;
+      localStorage.setItem('buddy_saved_status', 'online');
+      closeSignupModal();
+      await handleSignedInUser(createdUser);
     }
 
     // 3. 탭 전환
@@ -1774,11 +1945,27 @@
 
     function renderHompyList() {
       const container = document.getElementById('content-container');
+      const friendRows = cachedFriendIds.map(fid => {
+        const u = cachedGlobalUsers[fid];
+        const nick = (u && u.nickname) ? u.nickname : fid;
+        return `
+          <div class="music-item" onclick="openMiniHompy('${escapeHtml(fid)}')">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:16px;">🏠</span>
+              <span class="music-name">${escapeHtml(nick)}의 미니홈피</span>
+            </div>
+          </div>`;
+      }).join('');
       container.innerHTML = `
-        <div class="group-header">▼ 버디 미니홈피</div>
-        <div style="padding: 12px; color: #555; font-size:12px; text-align:center;">
-          추억의 미니홈피 서비스는<br>준비 중입니다! 🏡
+        <div class="group-header">▼ 내 미니홈피</div>
+        <div class="music-item" onclick="openMiniHompy(myUserId)">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:16px;">🏡</span>
+            <span class="music-name">${escapeHtml(myNickname)}의 미니홈피</span>
+          </div>
         </div>
+        <div class="group-header" style="margin-top:6px;">▼ 친구 미니홈피 (${cachedFriendIds.length})</div>
+        ${friendRows || '<div style="padding: 8px; color: #777; font-size:12px; text-align:center;">아직 친구가 없습니다.</div>'}
       `;
     }
 
@@ -1856,20 +2043,31 @@
     function syncUsersStatus() {
       updateMyDataToDB();
 
+      // 창을 그냥 닫아도 오프라인으로 바뀌도록
+      database.ref('global_users/' + myUserId + '/status').onDisconnect().set('offline');
+
+      // 감시는 한 번씩만 붙여요. (예전에는 사용자 정보가 바뀔 때마다 친구 목록 감시가 계속 늘어났어요)
+      database.ref('global_users').off();
+      database.ref('user_friends/' + myUserId).off();
+
       database.ref('global_users').on('value', (snapshot) => {
         cachedGlobalUsers = snapshot.val() || {};
-
-        if (myUserId) {
-          database.ref('user_friends/' + myUserId).on('value', (friendSnap) => {
-            const friendObj = friendSnap.val() || {};
-            cachedFriendIds = Object.keys(friendObj);
-
-            if (currentTab === 'friend') {
-              renderFriends(cachedGlobalUsers, cachedFriendIds);
-            }
-          });
-        }
+        refreshCurrentList();
       });
+
+      database.ref('user_friends/' + myUserId).on('value', (friendSnap) => {
+        const friendObj = friendSnap.val() || {};
+        cachedFriendIds = Object.keys(friendObj);
+        refreshCurrentList();
+      });
+    }
+
+    function refreshCurrentList() {
+      if (currentTab === 'friend') {
+        renderFriends(cachedGlobalUsers, cachedFriendIds);
+      } else if (currentTab === 'hompy') {
+        renderHompyList();
+      }
     }
 
     function renderFriends(globalUsers = {}, friendIds = []) {
@@ -1905,7 +2103,7 @@
         item.innerHTML = `
           <div style="display:flex; align-items:center; gap:8px; flex:1;">
             <span class="status-dot ${dotClass}"></span>
-            <span class="friend-name">${displayNickname}</span>
+            <span class="friend-name">${escapeHtml(displayNickname)}</span>
           </div>
         `;
 
@@ -1983,8 +2181,15 @@
 
     function removeFriend(friendId) {
       if (myUserId && friendId) {
-        database.ref(`user_friends/${myUserId}/${friendId}`).remove();
-        showWin98Toast(`친구 목록에서 삭제되었습니다.`);
+        database.ref().update({
+          [`user_friends/${myUserId}/${friendId}`]: null,
+          [`user_friends/${friendId}/${myUserId}`]: null
+        }).then(() => {
+          showWin98Toast(`친구 목록에서 삭제되었습니다.`);
+        }).catch(() => {
+          database.ref(`user_friends/${myUserId}/${friendId}`).remove();
+          showWin98Toast(`친구 목록에서 삭제되었습니다.`);
+        });
       }
     }
 
@@ -2034,7 +2239,7 @@
               return;
             }
 
-            database.ref('friend_requests/' + targetId).push({
+            database.ref('friend_requests/' + targetId + '/' + myUserId).set({
               fromId: myUserId,
               fromNickname: myNickname,
               timestamp: Date.now()
@@ -2113,8 +2318,8 @@
     function startChat(partnerTarget) {
       if (!partnerTarget) return;
 
-      database.ref('global_users').once('value', (snapshot) => {
-        const users = snapshot.val() || {};
+      Promise.resolve(cachedGlobalUsers).then((users) => {
+        users = users || {};
 
         let actualPartnerId = partnerTarget;
         let partnerData = users[partnerTarget];
@@ -2196,7 +2401,7 @@
       const displayName = isMe ? "나" : senderNick;
       const color = isMe ? "#000080" : "#d9534f";
 
-      msgDiv.innerHTML = `<span class="sender" style="color:${color};">${displayName}:</span><br>${text.replace(/\n/g, '<br>')}`;
+      msgDiv.innerHTML = `<span class="sender" style="color:${color};">${escapeHtml(displayName)}:</span><br>${escapeHtml(text).replace(/\n/g, '<br>')}`;
       chatMessages.appendChild(msgDiv);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -2229,16 +2434,17 @@
     function previewAvatar(event) {
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          myProfile.avatar = e.target.result;
+        compressImageFile(file, 240, 0.85).then((dataUrl) => {
+          myProfile.avatar = dataUrl;
           const img = document.getElementById('modal-avatar-img');
           img.src = myProfile.avatar;
           img.style.display = 'block';
           document.getElementById('modal-avatar-ph').style.display = 'none';
-        };
-        reader.readAsDataURL(file);
+        }).catch(() => {
+          showWin98Toast('사진을 불러오지 못했습니다. 다른 사진으로 시도해 주세요.');
+        });
       }
+      event.target.value = '';
     }
 
     function saveProfile() {
@@ -2288,26 +2494,25 @@
         return;
       }
 
-      // DB에서 현재 비밀번호 검증 후 업데이트
-      database.ref('global_users/' + myUserId).once('value', (snapshot) => {
-        const userData = snapshot.val();
-        if (userData) {
-          if (userData.password && userData.password !== currentPw) {
+      const user = auth.currentUser;
+      if (!user) {
+        showWin98Toast('다시 로그인한 뒤 시도해 주세요.');
+        return;
+      }
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, toAuthPassword(currentPw));
+      user.reauthenticateWithCredential(credential)
+        .then(() => user.updatePassword(toAuthPassword(newPw)))
+        .then(() => {
+          closeChangePasswordDialog();
+          showWin98Toast('비밀번호가 성공적으로 변경되었습니다!');
+        })
+        .catch((err) => {
+          if (isWrongLoginError(err)) {
             showWin98Toast('현재 비밀번호가 일치하지 않습니다.');
-            return;
-          }
-
-          // 비밀번호 변경 저장
-          database.ref('global_users/' + myUserId).update({
-            password: newPw
-          }).then(() => {
-            closeChangePasswordDialog();
-            showWin98Toast('비밀번호가 성공적으로 변경되었습니다!');
-          }).catch((err) => {
+          } else {
             showWin98Toast('비밀번호 변경 실패: ' + err.message);
-          });
-        }
-      });
+          }
+        });
     }
 
     // 9. 회원 탈퇴
@@ -2321,7 +2526,7 @@
       document.getElementById('delete-account-dialog-overlay').style.display = 'none';
     }
 
-    function submitDeleteAccount() {
+    async function submitDeleteAccount() {
       const inputId = document.getElementById('delete-user-id-input').value.trim();
       const inputPw = document.getElementById('delete-user-pw-input').value.trim();
 
@@ -2335,71 +2540,66 @@
         return;
       }
 
-      database.ref('global_users/' + inputId).once('value', (snapshot) => {
-        const userData = snapshot.val();
-        if (userData) {
-          if (userData.password && userData.password !== inputPw) {
-            showWin98Toast('비밀번호가 일치하지 않습니다.');
-            return;
-          }
+      const user = auth.currentUser;
+      if (!user) {
+        showWin98Toast('다시 로그인한 뒤 시도해 주세요.');
+        return;
+      }
 
-          database.ref('user_friends').once('value', (friendsSnapshot) => {
-            const allFriendsData = friendsSnapshot.val() || {};
-            for (let ownerId in allFriendsData) {
-              if (allFriendsData[ownerId][inputId]) {
-                database.ref(`user_friends/${ownerId}/${inputId}`).remove();
-              }
-            }
-          });
+      try {
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, toAuthPassword(inputPw));
+        await user.reauthenticateWithCredential(credential);
+      } catch (err) {
+        showWin98Toast(isWrongLoginError(err) ? '비밀번호가 일치하지 않습니다.' : ('탈퇴 확인 실패: ' + err.message));
+        return;
+      }
 
-          database.ref('rooms').once('value', (roomsSnapshot) => {
-            const allRooms = roomsSnapshot.val() || {};
-            for (let roomCode in allRooms) {
-              if (roomCode.includes(inputId)) {
-                database.ref(`rooms/${roomCode}`).remove();
-              }
-            }
-          });
+      try {
+        // 내 친구들 쪽 목록과 대화방도 함께 정리
+        const friendSnap = await database.ref('user_friends/' + inputId).once('value');
+        const friendIds = Object.keys(friendSnap.val() || {});
+        const updates = {};
+        friendIds.forEach(fid => {
+          updates[`user_friends/${fid}/${inputId}`] = null;
+          updates[`rooms/${[inputId, fid].sort().join('_room_')}`] = null;
+        });
+        updates['user_friends/' + inputId] = null;
+        updates['friend_requests/' + inputId] = null;
+        updates['minihompy/' + inputId] = null;
+        updates['global_users/' + inputId] = null;
+        updates['owners_by_uid/' + user.uid] = null;
+        updates['id_owners/' + inputId] = null;
 
-          database.ref('friend_requests/' + inputId).remove();
-
-          database.ref('friend_requests').once('value', (reqSnapshot) => {
-            const allReqs = reqSnapshot.val() || {};
-            for (let targetId in allReqs) {
-              for (let reqKey in allReqs[targetId]) {
-                if (allReqs[targetId][reqKey].fromId === inputId) {
-                  database.ref(`friend_requests/${targetId}/${reqKey}`).remove();
-                }
-              }
-            }
-          });
-
-          database.ref('user_friends/' + inputId).remove();
-
-          database.ref('global_users/' + inputId).remove().then(() => {
-            localStorage.removeItem('buddy_saved_user_id');
-            localStorage.removeItem('buddy_saved_status');
-
-            closeDeleteAccountDialog();
-            closeProfileModal();
-
-            document.getElementById('chat-screen').style.display = 'none';
-            document.getElementById('user-id-input').value = '';
-            document.getElementById('room-code-input').value = '';
-
-            showLoginScreen();
-
-            myUserId = "";
-            myNickname = "";
-            myStatus = "online";
-            myProfile = getDefaultProfile();
-            showWin98Toast('회원 탈퇴가 완료되어 계정 및 연관된 모든 데이터가 완전히 삭제되었습니다.');
-          });
-
-        } else {
-          showWin98Toast('존재하지 않는 계정 정보입니다.');
+        database.ref('global_users/' + inputId + '/status').onDisconnect().cancel();
+        database.ref('global_users').off();
+        database.ref('user_friends/' + inputId).off();
+        database.ref('friend_requests/' + inputId).off();
+        if (roomRef) {
+          roomRef.child('messages').off();
+          roomRef = null;
         }
-      });
+
+        await database.ref().update(updates);
+        await user.delete();
+      } catch (err) {
+        showWin98Toast('탈퇴 처리 중 오류가 발생했습니다: ' + err.message);
+        return;
+      }
+
+      localStorage.removeItem('buddy_saved_status');
+      closeDeleteAccountDialog();
+      closeProfileModal();
+
+      document.getElementById('chat-screen').style.display = 'none';
+      document.getElementById('user-id-input').value = '';
+      document.getElementById('room-code-input').value = '';
+
+      myUserId = "";
+      myNickname = "";
+      myStatus = "online";
+      myProfile = getDefaultProfile();
+      showLoginScreen();
+      showWin98Toast('회원 탈퇴가 완료되어 계정 및 연관된 모든 데이터가 완전히 삭제되었습니다.');
     }
 
     // 10. 프로필 사진 삭제 함수
