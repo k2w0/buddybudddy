@@ -43,7 +43,7 @@ rooms/{아이디A}_room_{아이디B}/messages/{자동키}: { senderId, senderNic
 
 ```
 minihompy/{아이디}
-  ├ data/{항목}: "JSON 문자열"        // 주인만 저장 가능. 로그인한 사람은 누구나 읽기 가능
+  ├ data/{항목}: "JSON 문자열"        // 주인만 저장 가능. 주인과 서로 친구인 사람만 읽기 가능
   │    ├ profileData, mood
   │    ├ diaries, diaryCategories
   │    ├ boardPosts, boardCategories
@@ -55,7 +55,7 @@ minihompy/{아이디}
   │    └ miniroom       // { customSkins: [{ name, url }], current }
   ├ photos/{사진 id}: "data URL"     // 1200px 이하 큰 그림. 크게 볼 때만 불러옴
   └ guestbook/{자동키}: { userId, userName, category, content, date, timestamp }
-                                     // 로그인한 사람은 누구나 자기 이름으로 쓰기 가능
+                                     // 친구만 자기 이름으로 쓰기 가능. 주인과 쓴 사람은 삭제 가능
 ```
 
 ## 자유게시판 (모든 친구의 홈피에 함께 보이는 공용 게시판)
@@ -71,6 +71,10 @@ public_board/{자동키}
 
 - 각 홈피 게시판의 "자유게시판" 카테고리와 "전체보기"에 함께 보입니다.
 - 쓴 사람만 수정/삭제할 수 있습니다. 다른 카테고리 글은 각자 `minihompy/{아이디}/data/boardPosts` 에 저장됩니다.
+
+- `minihompy/{아이디}` 전체는 **주인과 서로 친구인 사람만** 읽을 수 있습니다. (`user_friends/{아이디}/{내 아이디}` 가 true)
+- 화면에 사용자 글자(이름, 제목, 카테고리 등)를 넣을 때는 반드시 `escapeFavoriteHtml()`,
+  `onclick="함수(...)"` 안에 넣을 때는 `jsArg()` 를 쓰세요. (다른 사람 화면에서 코드가 실행되는 것을 막기 위해)
 
 `data` 아래 항목은 배열이 비어도 사라지지 않도록 **JSON 문자열**로 저장합니다. 읽을 때 `JSON.parse` 하세요.
 

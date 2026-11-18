@@ -89,7 +89,7 @@
 
     "minihompy": {
       "$id": {
-        ".read": "auth != null",
+        ".read": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && (root.child('id_owners/' + $id).val() === auth.uid || root.child('user_friends/' + $id + '/' + root.child('owners_by_uid/' + auth.uid).val()).val() === true)",
         ".write": "auth != null && !newData.exists() && root.child('id_owners/' + $id).val() === auth.uid",
         "data": {
           "$key": {
@@ -105,7 +105,7 @@
         },
         "guestbook": {
           "$entryId": {
-            ".write": "auth != null && (root.child('id_owners/' + $id).val() === auth.uid || (!data.exists() && newData.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val()) || (data.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val() && !newData.exists()))",
+            ".write": "auth != null && (root.child('id_owners/' + $id).val() === auth.uid || (!data.exists() && newData.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val() && root.child('user_friends/' + $id + '/' + root.child('owners_by_uid/' + auth.uid).val()).val() === true) || (data.child('userId').val() === root.child('owners_by_uid/' + auth.uid).val() && !newData.exists()))",
             ".validate": "!newData.exists() || (newData.child('content').isString() && newData.child('content').val().length <= 1000 && newData.child('timestamp').isNumber())"
           }
         }
