@@ -3217,7 +3217,11 @@
         showWin98Toast('💌 편지를 보냈어요! 답장이 오면 📮 문의함에 표시돼요.');
         setTimeout(() => switchMailboxTab('mine'), 900);
       } catch (err) {
-        showWin98Toast('편지를 보내지 못했어요. 잠시 후 다시 시도해 주세요.');
+        console.error('편지 보내기 실패', err);
+        const code = String((err && (err.code || err.message)) || '').toUpperCase();
+        showWin98Toast(code.includes('PERMISSION')
+          ? '편지를 보내지 못했어요. (권한 없음: 서버 보안 규칙을 확인해 주세요)'
+          : '편지를 보내지 못했어요. 잠시 후 다시 시도해 주세요.');
       } finally {
         btn.disabled = false;
       }
