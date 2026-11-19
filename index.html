@@ -1004,6 +1004,27 @@
       flex-wrap: wrap;
       gap: 4px;
     }
+    /* 비밀번호 안전 안내 */
+    .pw-safety-note {
+      margin: 8px 0 4px;
+      padding: 6px 8px;
+      background: #fff8e1;
+      border: 1px solid #e0b84a;
+      color: #6b4e00;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .pw-safety-note b {
+      color: #b23c17;
+    }
+
+    .pw-safety-tip {
+      font-size: 10px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 2px;
+    }
   </style>
 
   <!-- Firebase SDK -->
@@ -1061,8 +1082,14 @@
         </div>
         <div class="signup-row">
           <label>▶ 비밀번호:</label>
-          <input type="password" id="signup-pw-input" placeholder="비밀번호">
+          <input type="password" id="signup-pw-input" placeholder="비밀번호 (4자리 이상)">
         </div>
+        <div class="pw-safety-note">
+          ⚠️ <b>다른 사이트에서 쓰는 비밀번호는 쓰지 마세요!</b><br>
+          버디버디는 친구들끼리 쓰려고 직접 만든 사이트예요. 혹시 모를 일에 대비해
+          이곳에서만 쓰는 비밀번호를 정해 주세요.
+        </div>
+        <div class="pw-safety-tip">💡 가입한 뒤 내 프로필 → [이메일 등록]을 해 두면 비밀번호를 잊어도 찾을 수 있어요.</div>
         <div style="display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px;">
           <button class="win98-btn" onclick="submitSignup()">가입하기</button>
           <button class="win98-btn" onclick="closeSignupModal()">취소</button>
@@ -1362,6 +1389,7 @@
             <input type="password" id="change-pw-confirm" placeholder="새 비밀번호 확인">
           </div>
         </div>
+        <div class="pw-safety-note" style="margin-top: 6px;">⚠️ 다른 사이트에서 쓰는 비밀번호는 쓰지 마세요.</div>
         <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
           <button class="win98-btn" onclick="changePassword()">비밀번호 변경</button>
         </div>
