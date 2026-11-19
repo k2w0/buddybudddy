@@ -29,6 +29,14 @@
       }
     },
 
+    "login_emails": {
+      "$id": {
+        ".read": true,
+        ".write": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && root.child('owners_by_uid/' + auth.uid).val().toLowerCase() === $id",
+        ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 120 && newData.val().contains('@') && !newData.val().contains(' ')"
+      }
+    },
+
     "global_users": {
       ".read": "auth != null",
       "$id": {

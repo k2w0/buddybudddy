@@ -999,6 +999,11 @@
       outline: none;
       background: #ffffff;
     }
+    /* 프로필 창 아래 버튼이 많아져서 좁은 화면에서는 줄을 바꿔요 */
+    #profile-modal .modal-footer {
+      flex-wrap: wrap;
+      gap: 4px;
+    }
   </style>
 
   <!-- Firebase SDK -->
@@ -1029,6 +1034,8 @@
           </div>
           <div class="login-sub-links">
             <span class="signup-link-btn" onclick="openSignupModal()"><u>신규가입</u></span>
+            <span style="color: #999; margin: 0 6px;">|</span>
+            <span class="signup-link-btn" onclick="openFindPasswordDialog()"><u>비밀번호 찾기</u></span>
           </div>
         </div>
         <button class="login-btn" id="login-btn">🔑<br>로그인</button>
@@ -1264,6 +1271,7 @@
         <div style="display:flex; gap:4px;">
           <button class="win98-btn" style="color:#d9534f;" onclick="openDeleteAccountDialog()">회원탈퇴</button>
           <button class="win98-btn" onclick="openChangePasswordDialog()">비밀번호 변경</button>
+          <button class="win98-btn" onclick="openEmailDialog()">이메일 등록</button>
         </div>
         <div>
           <button class="win98-btn" id="save-profile-btn" onclick="saveProfile()">저장</button>
@@ -1274,6 +1282,62 @@
   </div>
 
   <!-- 5-1. [비밀번호 변경 Windows 98 레트로 Dialog] -->
+  <!-- [이메일 등록] 비밀번호를 잊었을 때 재설정 메일을 받을 주소 -->
+  <div class="modal-overlay" id="email-dialog-overlay">
+    <div class="window win98-dialog">
+      <div class="title-bar">
+        <span>📧 이메일 등록</span>
+        <div class="title-bar-controls"><button onclick="closeEmailDialog()">✕</button></div>
+      </div>
+      <div class="pw-dialog-body">
+        <div class="pw-dialog-title"><span>📧</span> 비밀번호 찾기용 이메일</div>
+        <div id="email-dialog-status" style="font-size: 11px; color: #555; margin-bottom: 6px; line-height: 1.5;"></div>
+        <div class="pw-dialog-grid">
+          <div class="pw-dialog-row">
+            <label>이메일:</label>
+            <input type="email" id="email-dialog-input" placeholder="example@gmail.com">
+          </div>
+          <div class="pw-dialog-row">
+            <label>현재 비번:</label>
+            <input type="password" id="email-dialog-pw" placeholder="본인 확인용 비밀번호">
+          </div>
+        </div>
+        <div style="font-size: 10px; color: #777; margin: 4px 0; line-height: 1.5;">
+          이 주소로 확인 메일이 가요. 메일 속 링크를 눌러야 등록이 끝나요.<br>
+          ※ 아이디를 아는 사람은 이 이메일 주소를 알아낼 수 있어요.
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button class="win98-btn" id="email-dialog-submit" onclick="submitEmailRegistration()">확인 메일 보내기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- [비밀번호 찾기] -->
+  <div class="modal-overlay" id="find-password-dialog-overlay">
+    <div class="window win98-dialog">
+      <div class="title-bar">
+        <span>🔑 비밀번호 찾기</span>
+        <div class="title-bar-controls"><button onclick="closeFindPasswordDialog()">✕</button></div>
+      </div>
+      <div class="pw-dialog-body">
+        <div class="pw-dialog-title"><span>🔑</span> 비밀번호 재설정 메일 받기</div>
+        <div class="pw-dialog-grid">
+          <div class="pw-dialog-row">
+            <label>아이디:</label>
+            <input type="text" id="find-pw-id-input" placeholder="이용자 ID">
+          </div>
+        </div>
+        <div id="find-pw-result" style="font-size: 11px; color: #555; margin: 6px 0; line-height: 1.6;">
+          등록한 이메일로 비밀번호 재설정 메일을 보내 드려요.
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+          <button class="win98-btn" id="find-pw-submit" onclick="submitFindPassword()">재설정 메일 보내기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="change-password-dialog-overlay">
     <div class="window win98-dialog">
       <div class="title-bar">
@@ -1561,7 +1625,11 @@
 
     async function handleSignedInUser(user) {
       if (!user) {
-        if (!myUserId) showLoginScreen();
+        if (!myUserId) {
+          showLoginScreen();
+        } else {
+          resetToLoginScreen('로그인이 풀렸어요. 다시 로그인해 주세요.');
+        }
         return;
       }
       // 이미 지워졌거나 바뀐 계정에 대한 늦은 알림은 무시
@@ -1585,6 +1653,10 @@
           return;
         }
 
+        if (!isPlaceholderEmail(user.email)) {
+          database.ref('login_emails/' + loginEmailKey(userId)).set(user.email).catch(() => { });
+        }
+
         myUserId = userId;
         myNickname = userData.nickname || userId;
         myProfile = userData.profile ? userData.profile : getDefaultProfile();
@@ -1605,6 +1677,26 @@
         showLoginScreen();
         showWin98Toast('로그인 정보를 불러오지 못했습니다: ' + err.message);
       }
+    }
+
+    // 화면만 로그인 화면으로 돌려요. (Firebase 로그인은 이미 풀린 상태)
+    function resetToLoginScreen(message) {
+      database.ref('friend_requests/' + myUserId).off();
+      database.ref('user_friends/' + myUserId).off();
+      database.ref('global_users').off();
+      if (roomRef) {
+        roomRef.child('messages').off();
+        roomRef = null;
+      }
+      myUserId = "";
+      myNickname = "";
+      myProfile = getDefaultProfile();
+      cachedGlobalUsers = {};
+      cachedFriendIds = [];
+      document.querySelectorAll('.modal-overlay').forEach(el => { el.style.display = 'none'; });
+      document.getElementById('chat-screen').style.display = 'none';
+      showLoginScreen();
+      if (message) showWin98Toast(message);
     }
 
     function showLoginScreen() {
@@ -1632,14 +1724,15 @@
       const loginBtn = document.getElementById('login-btn');
       loginBtn.disabled = true;
       try {
-        await auth.signInWithEmailAndPassword(idToEmail(inputId), toAuthPassword(inputPw));
+        await signInWithIdAndPassword(inputId, inputPw);
         // 나머지는 onAuthStateChanged → handleSignedInUser 가 처리
       } catch (err) {
         if (!isWrongLoginError(err)) {
           showWin98Toast('로그인 중 오류가 발생했습니다: ' + err.message);
         } else {
           // 새 로그인 방식으로 아직 옮기지 않은 기존 계정일 수 있어요.
-          const result = await migrateLegacyAccount(inputId, inputPw);
+          // (이메일을 등록한 계정은 이미 옮긴 계정이라 건너뛰어요)
+          const result = (await lookupLoginEmail(inputId)) ? 'wrong' : await migrateLegacyAccount(inputId, inputPw);
           if (result === 'migrated') {
             showWin98Toast('새 로그인 방식으로 계정을 옮겼습니다. 다음부터는 그대로 로그인하면 돼요!');
           } else if (result === 'error') {
@@ -1651,6 +1744,59 @@
       } finally {
         loginBtn.disabled = false;
       }
+    }
+
+    /* 이메일을 등록한 계정은 Firebase 계정 이메일이 실제 이메일로 바뀌어 있어요.
+       그래서 1) 등록 이메일  2) 아이디 이메일 순서로 로그인을 시도해요.
+       재설정 메일로 비밀번호를 바꾸면 'bb#' 없이 저장되므로, 그대로도 한 번 시도한 뒤
+       로그인되면 원래 형식('bb#' + 비밀번호)으로 바로 바꿔 둬요. */
+    function loginEmailKey(id) {
+      return String(id).trim().toLowerCase();
+    }
+
+    async function lookupLoginEmail(id) {
+      try {
+        const snap = await database.ref('login_emails/' + loginEmailKey(id)).once('value');
+        const v = snap.val();
+        return (typeof v === 'string' && v.includes('@')) ? v : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function isPlaceholderEmail(email) {
+      return !email || email.toLowerCase().endsWith('@' + AUTH_EMAIL_DOMAIN);
+    }
+
+    function maskEmail(email) {
+      const [name, domain] = String(email).split('@');
+      if (!domain) return email;
+      const shown = name.length <= 3 ? name.slice(0, 1) : name.slice(0, 2);
+      return shown + '*'.repeat(Math.max(2, name.length - shown.length)) + '@' + domain;
+    }
+
+    async function signInWithIdAndPassword(inputId, inputPw) {
+      const realEmail = await lookupLoginEmail(inputId);
+      const attempts = [];
+      if (realEmail) {
+        attempts.push({ email: realEmail, password: toAuthPassword(inputPw), raw: false });
+        if (inputPw.length >= 6) attempts.push({ email: realEmail, password: inputPw, raw: true });
+      }
+      attempts.push({ email: idToEmail(inputId), password: toAuthPassword(inputPw), raw: false });
+      let lastErr = null;
+      for (const a of attempts) {
+        try {
+          const cred = await auth.signInWithEmailAndPassword(a.email, a.password);
+          if (a.raw) {
+            try { await cred.user.updatePassword(toAuthPassword(inputPw)); } catch (e) { console.warn('비밀번호 형식 맞추기 실패', e); }
+          }
+          return cred;
+        } catch (err) {
+          lastErr = err;
+          if (!isWrongLoginError(err)) throw err;
+        }
+      }
+      throw lastErr;
     }
 
     /* 기존 계정 자동 이전
@@ -2463,6 +2609,104 @@
     }
 
     // 🔒 비밀번호 변경 Win98 Dialog 제어 및 실행 함수
+    /* ===== 이메일 등록 (비밀번호 찾기용) ===== */
+    async function openEmailDialog() {
+      const user = auth.currentUser;
+      const status = document.getElementById('email-dialog-status');
+      document.getElementById('email-dialog-pw').value = '';
+      document.getElementById('email-dialog-input').value = '';
+      status.textContent = '확인 중...';
+      document.getElementById('email-dialog-overlay').style.display = 'flex';
+      try { if (user) await user.reload(); } catch (e) { }
+      const current = auth.currentUser;
+      const saved = await lookupLoginEmail(myUserId);
+      if (current && !isPlaceholderEmail(current.email)) {
+        status.textContent = `✅ 등록된 이메일: ${maskEmail(current.email)} (다른 주소로 바꾸려면 새로 입력하세요)`;
+      } else if (saved) {
+        status.textContent = `⏳ ${maskEmail(saved)} 확인 대기 중이에요. 메일함(스팸함 포함)의 링크를 눌러 주세요.`;
+      } else {
+        status.textContent = '아직 등록된 이메일이 없어요.';
+      }
+    }
+
+    function closeEmailDialog() {
+      document.getElementById('email-dialog-overlay').style.display = 'none';
+    }
+
+    async function submitEmailRegistration() {
+      const email = document.getElementById('email-dialog-input').value.trim();
+      const pw = document.getElementById('email-dialog-pw').value.trim();
+      const user = auth.currentUser;
+      if (!user) { showWin98Toast('다시 로그인한 뒤 시도해 주세요.'); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showWin98Toast('이메일 주소를 정확히 입력해 주세요.'); return; }
+      if (!pw) { showWin98Toast('본인 확인을 위해 현재 비밀번호를 입력해 주세요.'); return; }
+      if (email.toLowerCase().endsWith('@' + AUTH_EMAIL_DOMAIN)) { showWin98Toast('사용할 수 없는 이메일이에요.'); return; }
+
+      const btn = document.getElementById('email-dialog-submit');
+      btn.disabled = true;
+      try {
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, toAuthPassword(pw));
+        await user.reauthenticateWithCredential(credential);
+        await user.verifyBeforeUpdateEmail(email);
+        // 아이디로 로그인할 때 이 이메일을 찾을 수 있게 저장 (확인 전이어도 기존 방식 로그인은 그대로 돼요)
+        await database.ref('login_emails/' + loginEmailKey(myUserId)).set(email);
+        closeEmailDialog();
+        showWin98Toast(`${maskEmail(email)}로 확인 메일을 보냈어요! 링크를 누르면 등록 완료. (그 뒤 한 번 다시 로그인해야 할 수 있어요)`);
+      } catch (err) {
+        if (isWrongLoginError(err)) {
+          showWin98Toast('현재 비밀번호가 일치하지 않습니다.');
+        } else if (err.code === 'auth/email-already-in-use') {
+          showWin98Toast('이미 다른 계정에 등록된 이메일이에요.');
+        } else if (err.code === 'auth/invalid-email') {
+          showWin98Toast('이메일 주소를 정확히 입력해 주세요.');
+        } else if (err.code === 'auth/too-many-requests') {
+          showWin98Toast('요청이 너무 많아요. 잠시 후 다시 시도해 주세요.');
+        } else {
+          showWin98Toast('이메일 등록 실패: ' + err.message);
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    /* ===== 비밀번호 찾기 ===== */
+    function openFindPasswordDialog() {
+      document.getElementById('find-pw-id-input').value = document.getElementById('user-id-input').value.trim();
+      document.getElementById('find-pw-result').textContent = '등록한 이메일로 비밀번호 재설정 메일을 보내 드려요.';
+      document.getElementById('find-password-dialog-overlay').style.display = 'flex';
+    }
+
+    function closeFindPasswordDialog() {
+      document.getElementById('find-password-dialog-overlay').style.display = 'none';
+    }
+
+    async function submitFindPassword() {
+      const id = document.getElementById('find-pw-id-input').value.trim();
+      const result = document.getElementById('find-pw-result');
+      if (!id) { showWin98Toast('아이디를 입력해 주세요.'); return; }
+      const btn = document.getElementById('find-pw-submit');
+      btn.disabled = true;
+      try {
+        const email = await lookupLoginEmail(id);
+        if (!email) {
+          result.innerHTML = '';
+          result.textContent = '이 아이디에는 등록된 이메일이 없어요. 관리자에게 비밀번호 초기화를 부탁해 주세요.';
+          return;
+        }
+        await auth.sendPasswordResetEmail(email);
+        result.textContent = `📨 ${maskEmail(email)}로 재설정 메일을 보냈어요. 메일 속 링크에서 새 비밀번호(6자리 이상)를 정한 뒤, 아이디와 새 비밀번호로 로그인하세요. 메일이 안 보이면 스팸함도 확인해 주세요.`;
+      } catch (err) {
+        if (err.code === 'auth/too-many-requests') {
+          result.textContent = '요청이 너무 많아요. 잠시 후 다시 시도해 주세요.';
+        } else {
+          result.textContent = '메일을 보내지 못했어요. 이메일 확인(링크 누르기)을 마쳤는지 확인해 주세요.';
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+
     function openChangePasswordDialog() {
       document.getElementById('change-pw-current').value = "";
       document.getElementById('change-pw-new').value = "";
@@ -2569,6 +2813,7 @@
         updates['global_users/' + inputId] = null;
         updates['owners_by_uid/' + user.uid] = null;
         updates['id_owners/' + inputId] = null;
+        updates['login_emails/' + loginEmailKey(inputId)] = null;
 
         database.ref('global_users/' + inputId + '/status').onDisconnect().cancel();
         database.ref('global_users').off();
@@ -2579,12 +2824,15 @@
           roomRef = null;
         }
 
+        isAuthFlowBusy = true;
         await database.ref().update(updates);
         await user.delete();
       } catch (err) {
+        isAuthFlowBusy = false;
         showWin98Toast('탈퇴 처리 중 오류가 발생했습니다: ' + err.message);
         return;
       }
+      isAuthFlowBusy = false;
 
       localStorage.removeItem('buddy_saved_status');
       closeDeleteAccountDialog();
