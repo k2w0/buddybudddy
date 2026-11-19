@@ -71,12 +71,38 @@ minihompy/{아이디}
   │    ├ guestbookCategories
   │    ├ favoriteCategories, favoriteHomes
   │    ├ ilchonGroups   // [{ id, name, friends: [{ userId, name }] }]
-  │    ├ photoAlbums    // [{ name, photos: [{ id, thumb, caption, date }] }]  thumb = 220px 작은 그림
+  │    ├ photoAlbums    // [{ name, visibility, photos: [{ id, thumb, caption, date }] }]  thumb = 220px 작은 그림
   │    └ miniroom       // { customSkins: [{ name, url }], current }
   ├ photos/{사진 id}: "data URL"     // 1200px 이하 큰 그림. 크게 볼 때만 불러옴
   └ guestbook/{자동키}: { userId, userName, category, content, date, timestamp }
                                      // 친구만 자기 이름으로 쓰기 가능. 주인과 쓴 사람은 삭제 가능
 ```
+
+### 공개 설정 (🔒 비공개 / 👥 친구공개 / 🌐 전체공개)
+
+다이어리 · 게시글 · 사진첩(앨범)은 항목마다 `visibility` 를 갖고, **공개 범위에 따라 저장하는 칸이 다릅니다.**
+화면에서 숨기는 게 아니라 칸이 달라서, 친구 브라우저에는 비공개 항목이 아예 내려가지 않습니다.
+
+| visibility | 저장 칸 | 읽을 수 있는 사람 | 쓰는 항목 |
+|---|---|---|---|
+| `private`  | `hompy_private/{아이디}/data/{항목}` | 주인만 | diaries, boardPosts, photoAlbums |
+| `friends`  | `minihompy/{아이디}/data/{항목}`     | 주인 + 서로 친구 | diaries, boardPosts, photoAlbums |
+| `public`   | `hompy_open/{아이디}/data/boardPosts` | 로그인한 사용자 누구나 | boardPosts 만 |
+
+```
+hompy_private/{아이디}
+  ├ data/{diaries | boardPosts | photoAlbums}: "JSON 문자열"   // 비공개 항목만
+  └ photos/{사진 id}: "data URL"                              // 비공개 앨범의 큰 사진
+hompy_open/{아이디}
+  └ data/boardPosts: "JSON 문자열"                             // 전체공개 게시글만
+```
+
+- 각 칸의 배열 항목에는 원래 순서 `_seq` 가 붙어 있고, 주인 화면에서는 세 칸을 합쳐 `_seq` 순으로 정렬합니다.
+- 공개 설정이 없는 옛 항목: 게시글/앨범은 친구공개, 다이어리는 주인이 접속할 때 비공개로 옮겨집니다.
+- 새 다이어리 · 앨범 · 게시글의 기본값은 비공개입니다.
+- 앨범 공개 설정을 바꾸면 큰 사진(`photos/{id}`)도 해당 칸으로 옮깁니다.
+- 친구가 아닌 사람이 홈피에 오면 가림막 아래에 `hompy_open` 의 전체공개 글만 보여 줍니다.
+- 탈퇴할 때 `minihompy`, `hompy_private`, `hompy_open` 의 내 칸을 모두 지웁니다.
 
 ## 자유게시판 (모든 친구의 홈피에 함께 보이는 공용 게시판)
 
@@ -90,7 +116,7 @@ public_board/{자동키}
 ```
 
 - 각 홈피 게시판의 "자유게시판" 카테고리와 "전체보기"에 함께 보입니다.
-- 쓴 사람만 수정/삭제할 수 있습니다. 다른 카테고리 글은 각자 `minihompy/{아이디}/data/boardPosts` 에 저장됩니다.
+- 쓴 사람만 수정/삭제할 수 있습니다. 다른 카테고리 글은 공개 설정에 따라 각자 홈피 칸에 저장됩니다. (아래 '공개 설정' 참고)
 
 - `minihompy/{아이디}` 전체는 **주인과 서로 친구인 사람만** 읽을 수 있습니다. (`user_friends/{아이디}/{내 아이디}` 가 true)
 - 화면에 사용자 글자(이름, 제목, 카테고리 등)를 넣을 때는 반드시 `escapeFavoriteHtml()`,
