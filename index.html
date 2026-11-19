@@ -1028,7 +1028,7 @@
     /* ===== 📮 버디 우체통 (문의함) ===== */
     .menu-bar .menu-mailbox {
       margin-left: auto;
-      color: #b0306a;
+      color: #0b5e75;
       font-weight: bold;
       position: relative;
     }
@@ -1064,7 +1064,7 @@
     }
 
     .mailbox-body {
-      background: #fff7fa;
+      background: #e4f0f2;
       padding: 10px;
       max-height: 78vh;
       overflow-y: auto;
@@ -1075,16 +1075,16 @@
       align-items: center;
       gap: 10px;
       padding: 8px 10px;
-      background: linear-gradient(135deg, #ffe3ec, #fff3d6);
-      border: 1px dashed #f0a5bd;
-      border-radius: 10px;
+      background: linear-gradient(to bottom, #8ee0f7, #ffffff);
+      border: 1px solid #7199a6;
+      border-radius: 4px;
       font-size: 11px;
-      color: #7a4a5a;
+      color: #1a525f;
       line-height: 1.5;
     }
 
     .mailbox-hero b {
-      color: #c2185b;
+      color: #e2a000;
       font-size: 13px;
     }
 
@@ -1109,10 +1109,10 @@
     .mailbox-tab {
       flex: 1;
       padding: 6px 4px;
-      border: 1px solid #f0a5bd;
-      border-radius: 14px;
-      background: #fff;
-      color: #a3456b;
+      border: 1px solid #5a9cae;
+      border-radius: 3px;
+      background: #92cbd7;
+      color: #1a525f;
       font-size: 11px;
       font-weight: bold;
       cursor: pointer;
@@ -1121,9 +1121,9 @@
     }
 
     .mailbox-tab.active {
-      background: #f48fb1;
-      border-color: #ec6f9b;
-      color: #fff;
+      background: #ffffff;
+      border-color: #5a9cae;
+      color: #0d4653;
     }
 
     .mailbox-pane {
@@ -1143,19 +1143,19 @@
 
     .mailbox-cat {
       padding: 4px 8px;
-      border: 1px solid #e3c8d3;
+      border: 1px solid #b3d1d8;
       border-radius: 12px;
       background: #fff;
       font-size: 11px;
       cursor: pointer;
       font-family: inherit;
-      color: #555;
+      color: #1a525f;
     }
 
     .mailbox-cat.active {
-      border-color: #f48fb1;
-      background: #ffe3ec;
-      color: #c2185b;
+      border-color: #7199a6;
+      background: #e3f8f5;
+      color: #0b5e75;
       font-weight: bold;
     }
 
@@ -1163,8 +1163,8 @@
       width: 100%;
       box-sizing: border-box;
       padding: 6px 8px;
-      border: 1px solid #e3c8d3;
-      border-radius: 6px;
+      border: 1px solid #7199a6;
+      border-radius: 2px;
       font-size: 12px;
       font-family: inherit;
       margin-bottom: 6px;
@@ -1176,14 +1176,14 @@
       box-sizing: border-box;
       height: 150px;
       padding: 4px 10px;
-      border: 1px solid #e3c8d3;
-      border-radius: 6px;
+      border: 1px solid #7199a6;
+      border-radius: 2px;
       font-size: 12px;
       line-height: 24px;
       font-family: inherit;
       resize: vertical;
-      background-color: #fffdf6;
-      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #f6d9e3 23px, #f6d9e3 24px);
+      background-color: #ffffff;
+      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #d4e3e5 23px, #d4e3e5 24px);
       background-attachment: local;
       color: #444;
     }
@@ -1194,27 +1194,27 @@
       align-items: center;
       margin-top: 6px;
       font-size: 10px;
-      color: #aa8a96;
+      color: #6294a0;
     }
 
     .mailbox-send {
-      background: #f48fb1 !important;
+      background: #2b6170 !important;
       color: #fff !important;
       font-weight: bold;
-      border-color: #ffd1e0 #c2185b #c2185b #ffd1e0 !important;
+      border-color: #81c7bc #0d4653 #0d4653 #81c7bc !important;
     }
 
     .mailbox-note {
       margin-top: 8px;
       font-size: 10px;
-      color: #b0306a;
+      color: #b23c17;
     }
 
     .mailbox-empty {
       text-align: center;
       padding: 26px 10px;
       font-size: 12px;
-      color: #aa8a96;
+      color: #6294a0;
       line-height: 1.7;
     }
 
@@ -1225,14 +1225,14 @@
       padding: 8px;
       margin-bottom: 6px;
       background: #fff;
-      border: 1px solid #f0d3de;
-      border-radius: 8px;
+      border: 1px solid #b3d1d8;
+      border-radius: 4px;
       cursor: pointer;
       position: relative;
     }
 
     .mailbox-letter-card:hover {
-      background: #fff0f5;
+      background: #e3f8f5;
     }
 
     .mailbox-letter-card .env {
@@ -1247,7 +1247,7 @@
     .mailbox-letter-card .title {
       font-size: 12px;
       font-weight: bold;
-      color: #444;
+      color: #0d4653;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1283,9 +1283,9 @@
       white-space: nowrap;
     }
 
-    .mail-stamp.new { color: #3b82c4; }
+    .mail-stamp.new { color: #2b6170; }
     .mail-stamp.read { color: #8a8a8a; }
-    .mail-stamp.answered { color: #d6336c; }
+    .mail-stamp.answered { color: #d08a00; }
 
     .mailbox-filter {
       display: flex;
@@ -1294,10 +1294,10 @@
     }
 
     .mailbox-read-paper {
-      background-color: #fffdf6;
-      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #f6d9e3 23px, #f6d9e3 24px);
-      border: 1px solid #f0d3de;
-      border-radius: 8px;
+      background-color: #ffffff;
+      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #d4e3e5 23px, #d4e3e5 24px);
+      border: 1px solid #b3d1d8;
+      border-radius: 4px;
       padding: 10px 12px;
       position: relative;
     }
@@ -1311,7 +1311,7 @@
     .mailbox-read-paper .subject {
       font-size: 13px;
       font-weight: bold;
-      color: #c2185b;
+      color: #0b5e75;
       margin-bottom: 6px;
       word-break: break-word;
       padding-right: 64px;
@@ -1334,11 +1334,11 @@
     .mailbox-reply {
       margin-top: 10px;
       padding: 8px 10px;
-      background: #eef8f1;
-      border: 1px solid #b9dcc5;
-      border-radius: 8px;
+      background: #e3f8f5;
+      border: 1px solid #81c7bc;
+      border-radius: 4px;
       font-size: 12px;
-      color: #2e5944;
+      color: #1a525f;
       line-height: 1.6;
     }
 
@@ -3310,7 +3310,7 @@
         </div>
         ${letter.reply ? `
           <div class="mailbox-reply">
-            <div class="label">💌 관리자의 답장 <span style="font-weight:normal; color:#7aa28a; font-size:10px;">${mailDate(letter.replyAt)}</span></div>
+            <div class="label">💌 관리자의 답장 <span style="font-weight:normal; color:#6294a0; font-size:10px;">${mailDate(letter.replyAt)}</span></div>
             <div class="text">${escapeHtml(letter.reply)}</div>
           </div>` : (viewingAsAdmin ? '' : '<div class="mailbox-empty" style="padding:12px;">⏳ 관리자가 읽고 답장해 줄 거예요. 조금만 기다려 주세요!</div>')}
         ${viewingAsAdmin ? `
