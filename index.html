@@ -320,6 +320,99 @@
     }
 
     .friend-item:hover,
+    /* ===== 음악 탭: 링크로 듣기 + 아래 고정 플레이어 ===== */
+    .msg-music-form {
+      margin: 2px 4px 6px 30px;
+      padding: 6px;
+      border: 1px solid #a9c8d2;
+      background: #f3fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .msg-music-form input {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 12px;
+      padding: 3px 4px;
+      border: 1px solid #7199a6;
+    }
+
+    .msg-music-form .msg-music-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .msg-music-form .msg-music-hint {
+      flex: 1;
+      font-size: 10px;
+      color: #777;
+      line-height: 1.4;
+    }
+
+    .msg-music-form .msg-music-hint.bad {
+      color: #c33;
+    }
+
+    .msg-music-form button,
+    #msg-music-dock .msg-music-dock-head button {
+      font-size: 11px;
+      padding: 1px 8px;
+      cursor: pointer;
+      background: #e8e8e8;
+      border: 1px solid;
+      border-color: #fff #808080 #808080 #fff;
+    }
+
+    .music-item.selected {
+      background-color: #e3f2f5;
+    }
+
+    #msg-music-dock {
+      margin: 0 4px 4px;
+      border: 1px solid #7199a6;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    #msg-music-dock .msg-music-dock-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 4px 3px 6px;
+      background: linear-gradient(to bottom, #e9f4f7, #cfe5ec);
+      border-bottom: 1px solid #a9c8d2;
+      font-size: 11px;
+      font-weight: bold;
+      color: #2b5866;
+    }
+
+    #msg-music-dock .msg-music-dock-title {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #msg-music-frame iframe {
+      display: block;
+      width: 100%;
+      border: 0;
+    }
+
+    #msg-music-note {
+      font-size: 10px;
+      color: #777;
+      padding: 2px 6px 3px;
+    }
+
+    #msg-music-note:empty {
+      display: none;
+    }
+
     .music-item:hover {
       background-color: #e3f2f5;
     }
@@ -2494,36 +2587,6 @@
       }
     }
 
-    function renderMusicList() {
-      const container = document.getElementById('content-container');
-      container.innerHTML = `
-        <div class="group-header">▼ 음악 스트리밍 서비스</div>
-        <div class="music-item" onclick="window.open('https://open.spotify.com', '_blank')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:16px;">🟢</span>
-            <span class="music-name">Spotify (스포티파이)</span>
-          </div>
-        </div>
-        <div class="music-item" onclick="window.open('https://music.apple.com', '_blank')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:16px;">🍎</span>
-            <span class="music-name">Apple Music (애플 뮤직)</span>
-          </div>
-        </div>
-        <div class="music-item" onclick="window.open('https://music.youtube.com', '_blank')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:16px;">▶️</span>
-            <span class="music-name">YouTube Music (유튜브 뮤직)</span>
-          </div>
-        </div>
-        <div class="music-item" onclick="window.open('https://soundcloud.com', '_blank')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:16px;">🟠</span>
-            <span class="music-name">SoundCloud (사운드클라우드)</span>
-          </div>
-        </div>
-      `;
-    }
 
     function renderHompyList() {
       const container = document.getElementById('content-container');
@@ -3622,6 +3685,168 @@
       document.getElementById('modal-avatar-ph').style.display = 'block';
       showWin98Toast('프로필 사진이 삭제되었습니다. [저장]을 눌러 반영하세요.');
     }
+  </script>
+  <script>
+    /* =====================================================================
+       음악 탭: 서비스를 누르고 링크를 넣으면 메신저 안에서 바로 재생
+       - 플레이어는 친구 목록 칸 아래에 붙어 있어서, 다른 탭으로 가도 음악이 계속 나와요.
+       - 유튜브·스포티파이 등은 플레이어 화면을 숨기면 안 되는 규칙이 있어서 화면은 보여 둬요.
+       - 계정은 각 음악 사이트에 이 브라우저로 로그인해 두면 그대로 써요. (버디버디에 저장 안 함)
+       ===================================================================== */
+    const MSG_MUSIC_SERVICES = {
+      spotify: { name: 'Spotify', icon: '🟢', home: 'https://open.spotify.com', height: 80,
+        note: '플레이어의 ▶를 눌러 주세요 (스포티파이 로그인 안 하면 30초 미리듣기)' },
+      apple: { name: 'Apple Music', icon: '🍎', home: 'https://music.apple.com', height: 175,
+        note: '플레이어의 ▶를 눌러 주세요 (구독자는 플레이어에서 로그인)' },
+      youtube: { name: 'YouTube Music', icon: '▶️', home: 'https://music.youtube.com', height: 200, note: '' },
+      soundcloud: { name: 'SoundCloud', icon: '🟠', home: 'https://soundcloud.com', height: 120,
+        note: '안 나오면 플레이어의 ▶를 눌러 주세요' }
+    };
+    const MSG_MUSIC_ORDER = ['spotify', 'apple', 'youtube', 'soundcloud'];
+    let msgMusicOpenService = null;
+    let msgMusicNow = null;   // { source, ref, title }
+
+    function parseMessengerMusicLink(raw) {
+      let u;
+      try { u = new URL(String(raw || '').trim()); } catch (e) { return null; }
+      if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+      const host = u.hostname.toLowerCase().replace(/^(www|m)\./, '');
+      if (host === 'youtu.be' || host === 'youtube.com' || host === 'music.youtube.com') {
+        let id = null;
+        if (host === 'youtu.be') id = u.pathname.slice(1).split('/')[0];
+        else if (u.pathname === '/watch') id = u.searchParams.get('v');
+        else {
+          const m = u.pathname.match(/^\/(shorts|embed|live)\/([\w-]{11})/);
+          if (m) id = m[2];
+        }
+        return id && /^[\w-]{11}$/.test(id) ? { source: 'youtube', ref: id } : null;
+      }
+      if (host === 'open.spotify.com') {
+        const m = u.pathname.match(/^\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?(?:embed\/)?(track|album|playlist|episode)\/([A-Za-z0-9]{10,40})\/?$/i);
+        return m ? { source: 'spotify', ref: m[1].toLowerCase() + '/' + m[2] } : null;
+      }
+      if (host === 'music.apple.com' || host === 'embed.music.apple.com') {
+        const m = u.pathname.match(/^\/([a-z]{2})\/(album|playlist|song)\/(?:([\w.%~-]+)\/)?((?:pl\.)?[\w.-]+)\/?$/);
+        if (!m) return null;
+        const i = u.searchParams.get('i');
+        return { source: 'apple', ref: `${m[1]}/${m[2]}/${m[3] ? m[3] + '/' : ''}${m[4]}${i && /^\d+$/.test(i) ? '?i=' + i : ''}` };
+      }
+      if (host === 'soundcloud.com') {
+        const m = u.pathname.match(/^\/([\w-]+)\/((?:sets\/)?[\w-]+)\/?$/);
+        return m ? { source: 'soundcloud', ref: m[1] + '/' + m[2] } : null;
+      }
+      if (host === 'on.soundcloud.com') return { error: 'soundcloud-short' };
+      return null;
+    }
+
+    function messengerEmbedUrl(source, ref) {
+      if (source === 'youtube') return `https://www.youtube.com/embed/${ref}?autoplay=1&playsinline=1&rel=0`;
+      if (source === 'spotify') return `https://open.spotify.com/embed/${ref}?utm_source=generator`;
+      if (source === 'apple') return `https://embed.music.apple.com/${ref}`;
+      if (source === 'soundcloud') return `https://w.soundcloud.com/player/?url=${encodeURIComponent('https://soundcloud.com/' + ref)}&auto_play=true&visual=false&show_comments=false&hide_related=true`;
+      return '';
+    }
+
+    function renderMusicList() {
+      const container = document.getElementById('content-container');
+      container.innerHTML = `<div class="group-header">▼ 음악 스트리밍 서비스</div>` + MSG_MUSIC_ORDER.map(key => {
+        const svc = MSG_MUSIC_SERVICES[key];
+        const open = msgMusicOpenService === key;
+        return `
+        <div class="music-item ${open ? 'selected' : ''}" onclick="toggleMessengerMusicForm('${key}')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:16px;">${svc.icon}</span>
+            <span class="music-name">${svc.name}</span>
+          </div>
+          <span style="font-size:10px; color:#7199a6;">${open ? '▲' : '▼'}</span>
+        </div>
+        ${open ? `
+        <div class="msg-music-form">
+          <input type="text" id="msg-music-link" placeholder="${svc.name} 링크를 붙여 넣으세요" onkeydown="if(event.key==='Enter'){playMessengerMusicLink();}">
+          <div class="msg-music-row">
+            <span class="msg-music-hint" id="msg-music-hint">[공유 → 링크 복사]한 주소를 넣어 주세요.</span>
+            <button onclick="playMessengerMusicLink()">재생</button>
+          </div>
+          <div class="msg-music-row">
+            <span class="msg-music-hint">사이트 열기: <a href="${svc.home}" target="_blank" rel="noopener noreferrer">${svc.name}</a></span>
+          </div>
+        </div>` : ''}`;
+      }).join('') + `
+        <div style="font-size:10px; color:#888; padding:6px 4px; line-height:1.5;">
+          🎵 재생한 음악은 아래 플레이어에서 나오고, 다른 탭으로 가도 계속 나와요.<br>
+          스포티파이·애플뮤직은 그 사이트에 로그인해 두면 전체 곡이 나와요.
+        </div>`;
+      const input = document.getElementById('msg-music-link');
+      if (input) input.focus();
+    }
+
+    function toggleMessengerMusicForm(key) {
+      msgMusicOpenService = msgMusicOpenService === key ? null : key;
+      renderMusicList();
+    }
+
+    function playMessengerMusicLink() {
+      const input = document.getElementById('msg-music-link');
+      const hint = document.getElementById('msg-music-hint');
+      if (!input) return;
+      const parsed = parseMessengerMusicLink(input.value);
+      const fail = (msg) => { if (hint) { hint.textContent = msg; hint.classList.add('bad'); } };
+      if (parsed && parsed.error === 'soundcloud-short') return fail('앱의 짧은 링크는 안 돼요. 사운드클라우드 웹 주소를 복사해 주세요.');
+      if (!parsed) return fail('지원하지 않는 링크예요. 링크를 다시 확인해 주세요.');
+      playMessengerMusic(parsed.source, parsed.ref);
+      input.value = '';
+      if (hint) { hint.textContent = `✔ ${MSG_MUSIC_SERVICES[parsed.source].name} 재생 중`; hint.classList.remove('bad'); }
+    }
+
+    function ensureMessengerMusicDock() {
+      let dock = document.getElementById('msg-music-dock');
+      if (dock) return dock;
+      const container = document.getElementById('content-container');
+      dock = document.createElement('div');
+      dock.id = 'msg-music-dock';
+      dock.style.display = 'none';
+      dock.innerHTML = `
+        <div class="msg-music-dock-head">
+          <span class="msg-music-dock-title" id="msg-music-title">🎵 음악</span>
+          <button onclick="stopMessengerMusic()" title="음악 끄기">■ 끄기</button>
+        </div>
+        <div id="msg-music-frame"></div>
+        <div id="msg-music-note"></div>`;
+      container.parentNode.insertBefore(dock, container.nextSibling);
+      return dock;
+    }
+
+    function playMessengerMusic(source, ref) {
+      const svc = MSG_MUSIC_SERVICES[source];
+      const url = messengerEmbedUrl(source, ref);
+      if (!svc || !url) return;
+      const dock = ensureMessengerMusicDock();
+      msgMusicNow = { source, ref };
+      document.getElementById('msg-music-title').textContent = `${svc.icon} ${svc.name} 재생 중`;
+      document.getElementById('msg-music-frame').innerHTML =
+        `<iframe src="${escapeHtml(url)}" height="${svc.height}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      document.getElementById('msg-music-note').textContent = svc.note;
+      dock.style.display = '';
+    }
+
+    function stopMessengerMusic() {
+      msgMusicNow = null;
+      const dock = document.getElementById('msg-music-dock');
+      if (!dock) return;
+      document.getElementById('msg-music-frame').innerHTML = '';
+      dock.style.display = 'none';
+    }
+
+    (function stopMusicOnSignOut() {
+      ['logout', 'resetToLoginScreen'].forEach(name => {
+        const original = window[name];
+        if (typeof original !== 'function') return;
+        window[name] = function () {
+          stopMessengerMusic();
+          return original.apply(this, arguments);
+        };
+      });
+    })();
   </script>
 </body>
 
