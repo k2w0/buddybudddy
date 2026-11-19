@@ -95,6 +95,25 @@
       }
     },
 
+    "inquiries": {
+      ".read": "auth != null && root.child('id_owners/heartBROKENPlaYBoY').val() === auth.uid",
+      "$authorId": {
+        ".read": "auth != null && (root.child('id_owners/' + $authorId).val() === auth.uid || root.child('id_owners/heartBROKENPlaYBoY').val() === auth.uid)",
+        ".write": "auth != null && !newData.exists() && (root.child('id_owners/' + $authorId).val() === auth.uid || root.child('id_owners/heartBROKENPlaYBoY').val() === auth.uid)",
+        "$letterId": {
+          ".write": "auth != null && ((root.child('id_owners/' + $authorId).val() === auth.uid && ((!data.exists() && newData.child('status').val() === 'new' && !newData.child('reply').exists() && !newData.child('replyAt').exists() && !newData.child('userSeen').exists()) || !newData.exists())) || root.child('id_owners/heartBROKENPlaYBoY').val() === auth.uid)",
+          ".validate": "!newData.exists() || (newData.child('authorId').val() === $authorId && newData.child('authorName').isString() && newData.child('title').isString() && newData.child('title').val().length >= 1 && newData.child('title').val().length <= 50 && newData.child('content').isString() && newData.child('content').val().length >= 1 && newData.child('content').val().length <= 2000 && (newData.child('category').val() === 'question' || newData.child('category').val() === 'bug' || newData.child('category').val() === 'idea' || newData.child('category').val() === 'etc') && newData.child('timestamp').isNumber() && (newData.child('status').val() === 'new' || newData.child('status').val() === 'read' || newData.child('status').val() === 'answered'))",
+          "reply": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+          "replyAt": { ".validate": "newData.isNumber()" },
+          "userSeen": {
+            ".write": "auth != null && root.child('id_owners/' + $authorId).val() === auth.uid && data.parent().exists()",
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": { ".validate": "$other === 'authorId' || $other === 'authorName' || $other === 'category' || $other === 'title' || $other === 'content' || $other === 'timestamp' || $other === 'status'" }
+        }
+      }
+    },
+
     "minihompy": {
       "$id": {
         ".read": "auth != null && root.child('owners_by_uid/' + auth.uid).exists() && (root.child('id_owners/' + $id).val() === auth.uid || root.child('user_friends/' + $id + '/' + root.child('owners_by_uid/' + auth.uid).val()).val() === true)",

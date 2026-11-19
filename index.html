@@ -1025,6 +1025,359 @@
       line-height: 1.5;
       margin-bottom: 2px;
     }
+    /* ===== 📮 버디 우체통 (문의함) ===== */
+    .menu-bar .menu-mailbox {
+      margin-left: auto;
+      color: #b0306a;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .menu-bar .menu-mailbox:hover {
+      text-decoration: underline;
+    }
+
+    .mailbox-badge {
+      display: none;
+      min-width: 14px;
+      height: 14px;
+      padding: 0 3px;
+      margin-left: 3px;
+      border-radius: 7px;
+      background: #e8344e;
+      color: #fff;
+      font-size: 9px;
+      line-height: 14px;
+      text-align: center;
+      vertical-align: 1px;
+    }
+
+    .mailbox-badge.show {
+      display: inline-block;
+    }
+
+    .mailbox-window {
+      width: 380px;
+      max-width: calc(100vw - 16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mailbox-body {
+      background: #fff7fa;
+      padding: 10px;
+      max-height: 78vh;
+      overflow-y: auto;
+    }
+
+    .mailbox-hero {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: linear-gradient(135deg, #ffe3ec, #fff3d6);
+      border: 1px dashed #f0a5bd;
+      border-radius: 10px;
+      font-size: 11px;
+      color: #7a4a5a;
+      line-height: 1.5;
+    }
+
+    .mailbox-hero b {
+      color: #c2185b;
+      font-size: 13px;
+    }
+
+    .mailbox-icon {
+      font-size: 30px;
+      animation: mailbox-wiggle 2.4s ease-in-out infinite;
+    }
+
+    @keyframes mailbox-wiggle {
+      0%, 80%, 100% { transform: rotate(0deg); }
+      85% { transform: rotate(-10deg); }
+      90% { transform: rotate(8deg); }
+      95% { transform: rotate(-4deg); }
+    }
+
+    .mailbox-tabs {
+      display: flex;
+      gap: 4px;
+      margin: 10px 0 8px;
+    }
+
+    .mailbox-tab {
+      flex: 1;
+      padding: 6px 4px;
+      border: 1px solid #f0a5bd;
+      border-radius: 14px;
+      background: #fff;
+      color: #a3456b;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .mailbox-tab.active {
+      background: #f48fb1;
+      border-color: #ec6f9b;
+      color: #fff;
+    }
+
+    .mailbox-pane {
+      display: none;
+    }
+
+    .mailbox-pane.active {
+      display: block;
+    }
+
+    .mailbox-cats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .mailbox-cat {
+      padding: 4px 8px;
+      border: 1px solid #e3c8d3;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      color: #555;
+    }
+
+    .mailbox-cat.active {
+      border-color: #f48fb1;
+      background: #ffe3ec;
+      color: #c2185b;
+      font-weight: bold;
+    }
+
+    .mailbox-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      border: 1px solid #e3c8d3;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: inherit;
+      margin-bottom: 6px;
+      background: #fff;
+    }
+
+    .letter-paper {
+      width: 100%;
+      box-sizing: border-box;
+      height: 150px;
+      padding: 4px 10px;
+      border: 1px solid #e3c8d3;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 24px;
+      font-family: inherit;
+      resize: vertical;
+      background-color: #fffdf6;
+      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #f6d9e3 23px, #f6d9e3 24px);
+      background-attachment: local;
+      color: #444;
+    }
+
+    .mailbox-write-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 10px;
+      color: #aa8a96;
+    }
+
+    .mailbox-send {
+      background: #f48fb1 !important;
+      color: #fff !important;
+      font-weight: bold;
+      border-color: #ffd1e0 #c2185b #c2185b #ffd1e0 !important;
+    }
+
+    .mailbox-note {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #b0306a;
+    }
+
+    .mailbox-empty {
+      text-align: center;
+      padding: 26px 10px;
+      font-size: 12px;
+      color: #aa8a96;
+      line-height: 1.7;
+    }
+
+    .mailbox-letter-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      margin-bottom: 6px;
+      background: #fff;
+      border: 1px solid #f0d3de;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .mailbox-letter-card:hover {
+      background: #fff0f5;
+    }
+
+    .mailbox-letter-card .env {
+      font-size: 22px;
+    }
+
+    .mailbox-letter-card .info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mailbox-letter-card .title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #444;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mailbox-letter-card .meta {
+      font-size: 10px;
+      color: #999;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mailbox-letter-card .new-dot {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e8344e;
+    }
+
+    .mail-stamp {
+      flex-shrink: 0;
+      padding: 2px 6px;
+      border: 2px solid currentColor;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      transform: rotate(-8deg);
+      white-space: nowrap;
+    }
+
+    .mail-stamp.new { color: #3b82c4; }
+    .mail-stamp.read { color: #8a8a8a; }
+    .mail-stamp.answered { color: #d6336c; }
+
+    .mailbox-filter {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .mailbox-read-paper {
+      background-color: #fffdf6;
+      background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #f6d9e3 23px, #f6d9e3 24px);
+      border: 1px solid #f0d3de;
+      border-radius: 8px;
+      padding: 10px 12px;
+      position: relative;
+    }
+
+    .mailbox-read-paper .head {
+      font-size: 10px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .mailbox-read-paper .subject {
+      font-size: 13px;
+      font-weight: bold;
+      color: #c2185b;
+      margin-bottom: 6px;
+      word-break: break-word;
+      padding-right: 64px;
+    }
+
+    .mailbox-read-paper .text {
+      font-size: 12px;
+      line-height: 24px;
+      color: #444;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .mailbox-read-paper .mail-stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .mailbox-reply {
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: #eef8f1;
+      border: 1px solid #b9dcc5;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #2e5944;
+      line-height: 1.6;
+    }
+
+    .mailbox-reply .label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .mailbox-reply .text {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .mailbox-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .mailbox-fly {
+      position: absolute;
+      left: 50%;
+      bottom: 30px;
+      font-size: 34px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%);
+    }
+
+    .mailbox-fly.flying {
+      animation: mailbox-fly 1.1s ease-in forwards;
+    }
+
+    @keyframes mailbox-fly {
+      0% { opacity: 1; transform: translate(-50%, 0) rotate(0deg) scale(1); }
+      60% { opacity: 1; transform: translate(40px, -160px) rotate(-20deg) scale(0.8); }
+      100% { opacity: 0; transform: translate(120px, -260px) rotate(-35deg) scale(0.4); }
+    }
   </style>
 
   <!-- Firebase SDK -->
@@ -1106,6 +1459,7 @@
     </div>
     <div class="menu-bar">
       <span>파일(F)</span><span>친구(B)</span><span>기능(A)</span><span>도구(T)</span>
+      <span class="menu-mailbox" onclick="openMailbox()" title="관리자에게 문의하기">📮 문의함<span class="mailbox-badge" id="menu-mailbox-badge"></span></span>
     </div>
 
     <div class="my-profile-card">
@@ -1362,6 +1716,56 @@
           <button class="win98-btn" id="find-pw-submit" onclick="submitFindPassword()">재설정 메일 보내기</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 📮 버디 우체통 (문의함): 관리자만 모든 편지를 읽을 수 있어요 -->
+  <div class="modal-overlay" id="mailbox-overlay">
+    <div class="window mailbox-window">
+      <div class="title-bar">
+        <span>📮 버디 우체통</span>
+        <div class="title-bar-controls"><button onclick="closeMailbox()">✕</button></div>
+      </div>
+      <div class="mailbox-body">
+        <div class="mailbox-hero">
+          <div class="mailbox-icon">📮</div>
+          <div>
+            <b>버디 우체통</b><br>
+            궁금한 점, 고장 난 곳, 바라는 점을 편지로 보내 주세요!<br>
+            보낸 편지는 <u>관리자만</u> 읽을 수 있어요.
+          </div>
+        </div>
+        <div class="mailbox-tabs">
+          <button class="mailbox-tab active" data-tab="write" onclick="switchMailboxTab('write')">✏️ 편지 쓰기</button>
+          <button class="mailbox-tab" data-tab="mine" onclick="switchMailboxTab('mine')">📬 내 편지<span class="mailbox-badge" id="mailbox-mine-badge"></span></button>
+          <button class="mailbox-tab mailbox-admin-only" data-tab="admin" onclick="switchMailboxTab('admin')">🔐 받은 편지<span class="mailbox-badge" id="mailbox-admin-badge"></span></button>
+        </div>
+
+        <div class="mailbox-pane active" id="mailbox-pane-write">
+          <div class="mailbox-cats" id="mailbox-cats"></div>
+          <input type="text" class="mailbox-input" id="mailbox-title" maxlength="50" placeholder="제목 (50자까지)">
+          <textarea class="letter-paper" id="mailbox-content" maxlength="2000" placeholder="관리자에게 하고 싶은 말을 적어 주세요 :)" oninput="updateMailboxCount()"></textarea>
+          <div class="mailbox-write-foot">
+            <span id="mailbox-count">0 / 2000</span>
+            <button class="win98-btn mailbox-send" id="mailbox-send-btn" onclick="sendMailboxLetter()">💌 보내기</button>
+          </div>
+          <div class="mailbox-note">※ 비밀번호는 절대 적지 마세요. 관리자는 비밀번호를 묻지 않아요!</div>
+        </div>
+
+        <div class="mailbox-pane" id="mailbox-pane-mine">
+          <div id="mailbox-mine-list"></div>
+        </div>
+
+        <div class="mailbox-pane" id="mailbox-pane-admin">
+          <div class="mailbox-filter" id="mailbox-admin-filter"></div>
+          <div id="mailbox-admin-list"></div>
+        </div>
+
+        <div class="mailbox-pane" id="mailbox-pane-read">
+          <div id="mailbox-read"></div>
+        </div>
+      </div>
+      <div class="mailbox-fly" id="mailbox-fly">✉️</div>
     </div>
   </div>
 
@@ -1709,6 +2113,7 @@
 
     // 화면만 로그인 화면으로 돌려요. (Firebase 로그인은 이미 풀린 상태)
     function resetToLoginScreen(message) {
+      stopMailbox();
       database.ref('friend_requests/' + myUserId).off();
       database.ref('user_friends/' + myUserId).off();
       database.ref('global_users').off();
@@ -1882,6 +2287,7 @@
       updateProfileUI();
       syncUsersStatus();
       listenFriendRequests();
+      startMailbox();
     }
 
     function updateProfileUI() {
@@ -1962,6 +2368,8 @@
       }
 
       localStorage.removeItem('buddy_saved_status');
+      stopMailbox();
+      closeMailbox();
 
       myUserId = "";
       myNickname = "";
@@ -2637,6 +3045,325 @@
     }
 
     // 🔒 비밀번호 변경 Win98 Dialog 제어 및 실행 함수
+    /* ===== 📮 버디 우체통 (문의함) =====
+       저장 위치: inquiries/{보낸 사람 아이디}/{편지 id}
+         = { authorId, authorName, category, title, content, timestamp,
+             status: 'new' | 'read' | 'answered', reply, replyAt, userSeen }
+       - 보낸 사람: 자기 편지만 읽기/삭제
+       - 관리자(BUDDY_ADMIN_ID): 모든 편지 읽기, 답장, 삭제 */
+    const BUDDY_ADMIN_ID = 'heartBROKENPlaYBoY';
+    const MAIL_CATEGORIES = {
+      question: { icon: '❓', label: '질문' },
+      bug: { icon: '🐞', label: '고장 신고' },
+      idea: { icon: '💡', label: '바라는 점' },
+      etc: { icon: '💌', label: '기타' }
+    };
+    const MAIL_STATUS = {
+      new: { label: '접수', cls: 'new' },
+      read: { label: '읽음', cls: 'read' },
+      answered: { label: '답장 도착', cls: 'answered' }
+    };
+    let mailboxCategory = 'question';
+    let myLetters = {};
+    let allLetters = {};
+    let mailboxMineRef = null;
+    let mailboxAllRef = null;
+    let mailboxAdminFilter = 'all';
+    let mailboxReturnTab = 'mine';
+    let mailboxReading = null;     // { authorId, id }
+    let lastMailSentAt = 0;
+
+    function isBuddyAdmin() {
+      return !!myUserId && myUserId === BUDDY_ADMIN_ID;
+    }
+
+    function mailDate(ts) {
+      if (!ts) return '';
+      const d = new Date(ts);
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    }
+
+    function startMailbox() {
+      stopMailbox();
+      mailboxMineRef = database.ref('inquiries/' + myUserId);
+      mailboxMineRef.on('value', (snap) => {
+        myLetters = snap.val() || {};
+        refreshMailbox();
+      }, () => { });
+      if (isBuddyAdmin()) {
+        mailboxAllRef = database.ref('inquiries');
+        mailboxAllRef.on('value', (snap) => {
+          allLetters = snap.val() || {};
+          refreshMailbox();
+        }, () => { });
+      }
+      document.querySelectorAll('.mailbox-admin-only').forEach(el => { el.style.display = isBuddyAdmin() ? '' : 'none'; });
+    }
+
+    function stopMailbox() {
+      if (mailboxMineRef) mailboxMineRef.off();
+      if (mailboxAllRef) mailboxAllRef.off();
+      mailboxMineRef = null;
+      mailboxAllRef = null;
+      myLetters = {};
+      allLetters = {};
+      updateMailboxBadges();
+    }
+
+    function setBadge(el, count) {
+      if (!el) return;
+      el.textContent = count > 99 ? '99+' : String(count);
+      el.classList.toggle('show', count > 0);
+    }
+
+    function countMineUnread() {
+      return Object.values(myLetters).filter(l => l.status === 'answered' && !l.userSeen).length;
+    }
+
+    function countAdminNew() {
+      let n = 0;
+      Object.values(allLetters).forEach(byUser => Object.values(byUser || {}).forEach(l => { if (l.status === 'new') n++; }));
+      return n;
+    }
+
+    function updateMailboxBadges() {
+      const mine = countMineUnread();
+      const adminNew = isBuddyAdmin() ? countAdminNew() : 0;
+      setBadge(document.getElementById('menu-mailbox-badge'), mine + adminNew);
+      setBadge(document.getElementById('mailbox-mine-badge'), mine);
+      setBadge(document.getElementById('mailbox-admin-badge'), adminNew);
+    }
+
+    function refreshMailbox() {
+      updateMailboxBadges();
+      const overlay = document.getElementById('mailbox-overlay');
+      if (!overlay || overlay.style.display !== 'flex') return;
+      renderMailboxMine();
+      if (isBuddyAdmin()) renderMailboxAdmin();
+      if (mailboxReading && document.getElementById('mailbox-pane-read').classList.contains('active')) {
+        renderMailboxLetter(false);
+      }
+    }
+
+    function openMailbox() {
+      if (!myUserId) return;
+      document.getElementById('mailbox-overlay').style.display = 'flex';
+      document.querySelectorAll('.mailbox-admin-only').forEach(el => { el.style.display = isBuddyAdmin() ? '' : 'none'; });
+      renderMailboxCategories();
+      updateMailboxCount();
+      switchMailboxTab(isBuddyAdmin() && countAdminNew() > 0 ? 'admin' : (countMineUnread() > 0 ? 'mine' : 'write'));
+    }
+
+    function closeMailbox() {
+      document.getElementById('mailbox-overlay').style.display = 'none';
+      mailboxReading = null;
+    }
+
+    function switchMailboxTab(tab) {
+      document.querySelectorAll('.mailbox-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      ['write', 'mine', 'admin', 'read'].forEach(name => {
+        document.getElementById('mailbox-pane-' + name).classList.toggle('active', name === tab);
+      });
+      if (tab === 'mine') renderMailboxMine();
+      if (tab === 'admin') renderMailboxAdmin();
+      if (tab !== 'read') mailboxReading = null;
+    }
+
+    function renderMailboxCategories() {
+      document.getElementById('mailbox-cats').innerHTML = Object.keys(MAIL_CATEGORIES).map(key => {
+        const c = MAIL_CATEGORIES[key];
+        return `<button class="mailbox-cat ${key === mailboxCategory ? 'active' : ''}" onclick="selectMailboxCategory('${key}')">${c.icon} ${c.label}</button>`;
+      }).join('');
+    }
+
+    function selectMailboxCategory(key) {
+      if (!MAIL_CATEGORIES[key]) return;
+      mailboxCategory = key;
+      renderMailboxCategories();
+    }
+
+    function updateMailboxCount() {
+      const len = document.getElementById('mailbox-content').value.length;
+      document.getElementById('mailbox-count').textContent = `${len} / 2000`;
+    }
+
+    async function sendMailboxLetter() {
+      const title = document.getElementById('mailbox-title').value.trim();
+      const content = document.getElementById('mailbox-content').value.trim();
+      if (!title) { showWin98Toast('편지 제목을 적어 주세요!'); return; }
+      if (!content) { showWin98Toast('편지 내용을 적어 주세요!'); return; }
+      if (Date.now() - lastMailSentAt < 30000) { showWin98Toast('편지는 30초에 한 통씩 보낼 수 있어요.'); return; }
+      const btn = document.getElementById('mailbox-send-btn');
+      btn.disabled = true;
+      try {
+        await database.ref('inquiries/' + myUserId).push({
+          authorId: myUserId,
+          authorName: myNickname || myUserId,
+          category: mailboxCategory,
+          title: title.slice(0, 50),
+          content: content.slice(0, 2000),
+          timestamp: Date.now(),
+          status: 'new'
+        });
+        lastMailSentAt = Date.now();
+        const fly = document.getElementById('mailbox-fly');
+        fly.classList.remove('flying');
+        void fly.offsetWidth;
+        fly.classList.add('flying');
+        document.getElementById('mailbox-title').value = '';
+        document.getElementById('mailbox-content').value = '';
+        updateMailboxCount();
+        showWin98Toast('💌 편지를 보냈어요! 답장이 오면 📮 문의함에 표시돼요.');
+        setTimeout(() => switchMailboxTab('mine'), 900);
+      } catch (err) {
+        showWin98Toast('편지를 보내지 못했어요. 잠시 후 다시 시도해 주세요.');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function letterCardHtml(letter, authorId, id, showSender) {
+      const cat = MAIL_CATEGORIES[letter.category] || MAIL_CATEGORIES.etc;
+      const st = MAIL_STATUS[letter.status] || MAIL_STATUS.new;
+      const unread = showSender ? letter.status === 'new' : (letter.status === 'answered' && !letter.userSeen);
+      const senderName = showSender
+        ? `${escapeHtml((cachedGlobalUsers[authorId] && cachedGlobalUsers[authorId].nickname) || letter.authorName || authorId)} (${escapeHtml(authorId)}) · `
+        : '';
+      return `
+        <div class="mailbox-letter-card" onclick="openMailboxLetter(${escapeHtml(JSON.stringify(authorId))}, ${escapeHtml(JSON.stringify(id))}, '${showSender ? 'admin' : 'mine'}')">
+          ${unread ? '<span class="new-dot"></span>' : ''}
+          <span class="env">${letter.status === 'answered' ? '💌' : '✉️'}</span>
+          <div class="info">
+            <div class="title">${cat.icon} ${escapeHtml(letter.title)}</div>
+            <div class="meta">${senderName}${mailDate(letter.timestamp)}</div>
+          </div>
+          <span class="mail-stamp ${st.cls}">${st.label}</span>
+        </div>`;
+    }
+
+    function renderMailboxMine() {
+      const list = document.getElementById('mailbox-mine-list');
+      const ids = Object.keys(myLetters).sort((a, b) => (myLetters[b].timestamp || 0) - (myLetters[a].timestamp || 0));
+      list.innerHTML = ids.length
+        ? ids.map(id => letterCardHtml(myLetters[id], myUserId, id, false)).join('')
+        : '<div class="mailbox-empty">📭 아직 보낸 편지가 없어요.<br>[✏️ 편지 쓰기]에서 첫 편지를 보내 보세요!</div>';
+    }
+
+    function renderMailboxAdmin() {
+      const filters = [['all', '전체'], ['new', '안 읽음'], ['todo', '답장 안 함'], ['answered', '답장 완료']];
+      document.getElementById('mailbox-admin-filter').innerHTML = filters.map(([key, label]) =>
+        `<button class="mailbox-cat ${mailboxAdminFilter === key ? 'active' : ''}" onclick="setMailboxAdminFilter('${key}')">${label}</button>`).join('');
+      const items = [];
+      Object.keys(allLetters).forEach(authorId => {
+        Object.keys(allLetters[authorId] || {}).forEach(id => items.push({ authorId, id, letter: allLetters[authorId][id] }));
+      });
+      const shown = items.filter(({ letter }) => {
+        if (mailboxAdminFilter === 'new') return letter.status === 'new';
+        if (mailboxAdminFilter === 'todo') return letter.status !== 'answered';
+        if (mailboxAdminFilter === 'answered') return letter.status === 'answered';
+        return true;
+      }).sort((a, b) => (b.letter.timestamp || 0) - (a.letter.timestamp || 0));
+      document.getElementById('mailbox-admin-list').innerHTML = shown.length
+        ? shown.map(({ authorId, id, letter }) => letterCardHtml(letter, authorId, id, true)).join('')
+        : '<div class="mailbox-empty">📭 해당하는 편지가 없어요.</div>';
+    }
+
+    function setMailboxAdminFilter(key) {
+      mailboxAdminFilter = key;
+      renderMailboxAdmin();
+    }
+
+    function findLetter(authorId, id) {
+      if (authorId === myUserId && myLetters[id]) return myLetters[id];
+      return allLetters[authorId] && allLetters[authorId][id];
+    }
+
+    function openMailboxLetter(authorId, id, from) {
+      mailboxReading = { authorId, id };
+      mailboxReturnTab = from === 'admin' ? 'admin' : 'mine';
+      switchMailboxTab('read');
+      mailboxReading = { authorId, id };
+      renderMailboxLetter(true);
+    }
+
+    function renderMailboxLetter(markSeen) {
+      if (!mailboxReading) return;
+      const { authorId, id } = mailboxReading;
+      const letter = findLetter(authorId, id);
+      const box = document.getElementById('mailbox-read');
+      if (!letter) {
+        box.innerHTML = '<div class="mailbox-empty">이 편지는 삭제되었어요.</div>';
+        return;
+      }
+      const cat = MAIL_CATEGORIES[letter.category] || MAIL_CATEGORIES.etc;
+      const st = MAIL_STATUS[letter.status] || MAIL_STATUS.new;
+      const viewingAsAdmin = isBuddyAdmin() && mailboxReturnTab === 'admin';
+      const senderName = (cachedGlobalUsers[authorId] && cachedGlobalUsers[authorId].nickname) || letter.authorName || authorId;
+
+      box.innerHTML = `
+        <div class="mailbox-read-paper">
+          <span class="mail-stamp ${st.cls}">${st.label}</span>
+          <div class="head">${cat.icon} ${cat.label} · ${viewingAsAdmin ? `보낸 사람: ${escapeHtml(senderName)} (${escapeHtml(authorId)}) · ` : ''}${mailDate(letter.timestamp)}</div>
+          <div class="subject">${escapeHtml(letter.title)}</div>
+          <div class="text">${escapeHtml(letter.content)}</div>
+        </div>
+        ${letter.reply ? `
+          <div class="mailbox-reply">
+            <div class="label">💌 관리자의 답장 <span style="font-weight:normal; color:#7aa28a; font-size:10px;">${mailDate(letter.replyAt)}</span></div>
+            <div class="text">${escapeHtml(letter.reply)}</div>
+          </div>` : (viewingAsAdmin ? '' : '<div class="mailbox-empty" style="padding:12px;">⏳ 관리자가 읽고 답장해 줄 거예요. 조금만 기다려 주세요!</div>')}
+        ${viewingAsAdmin ? `
+          <textarea class="letter-paper" id="mailbox-reply-input" style="height:100px; margin-top:10px;" maxlength="2000" placeholder="답장을 적어 주세요">${escapeHtml(letter.reply || '')}</textarea>` : ''}
+        <div class="mailbox-actions">
+          <button class="win98-btn" onclick="switchMailboxTab('${mailboxReturnTab}')">◀ 목록</button>
+          <div style="display:flex; gap:4px;">
+            <button class="win98-btn" style="color:#d9534f;" onclick="deleteMailboxLetter()">삭제</button>
+            ${viewingAsAdmin ? `<button class="win98-btn mailbox-send" onclick="sendMailboxReply()">💌 ${letter.reply ? '답장 고치기' : '답장 보내기'}</button>` : ''}
+          </div>
+        </div>`;
+
+      if (markSeen) {
+        if (viewingAsAdmin && letter.status === 'new') {
+          database.ref(`inquiries/${authorId}/${id}/status`).set('read').catch(() => { });
+        } else if (!viewingAsAdmin && authorId === myUserId && letter.status === 'answered' && !letter.userSeen) {
+          database.ref(`inquiries/${authorId}/${id}/userSeen`).set(true).catch(() => { });
+        }
+      }
+    }
+
+    async function sendMailboxReply() {
+      if (!isBuddyAdmin() || !mailboxReading) return;
+      const input = document.getElementById('mailbox-reply-input');
+      const reply = input.value.trim();
+      if (!reply) { showWin98Toast('답장 내용을 적어 주세요!'); return; }
+      const { authorId, id } = mailboxReading;
+      try {
+        await database.ref(`inquiries/${authorId}/${id}`).update({
+          status: 'answered',
+          reply: reply.slice(0, 2000),
+          replyAt: Date.now(),
+          userSeen: false
+        });
+        showWin98Toast('💌 답장을 보냈어요!');
+      } catch (err) {
+        showWin98Toast('답장을 보내지 못했어요.');
+      }
+    }
+
+    async function deleteMailboxLetter() {
+      if (!mailboxReading) return;
+      if (!confirm('이 편지를 삭제할까요? 삭제하면 되돌릴 수 없어요.')) return;
+      const { authorId, id } = mailboxReading;
+      try {
+        await database.ref(`inquiries/${authorId}/${id}`).remove();
+        showWin98Toast('편지를 삭제했어요.');
+        switchMailboxTab(mailboxReturnTab);
+      } catch (err) {
+        showWin98Toast('삭제하지 못했어요.');
+      }
+    }
+
     /* ===== 이메일 등록 (비밀번호 찾기용) ===== */
     async function openEmailDialog() {
       const user = auth.currentUser;
@@ -2842,6 +3569,8 @@
         updates['owners_by_uid/' + user.uid] = null;
         updates['id_owners/' + inputId] = null;
         updates['login_emails/' + loginEmailKey(inputId)] = null;
+        updates['inquiries/' + inputId] = null;
+        stopMailbox();
 
         database.ref('global_users/' + inputId + '/status').onDisconnect().cancel();
         database.ref('global_users').off();

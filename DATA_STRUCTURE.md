@@ -42,6 +42,21 @@ rooms/{아이디A}_room_{아이디B}/messages/{자동키}: { senderId, senderNic
       // 방 이름의 두 아이디는 알파벳 순서로 정렬
 ```
 
+## 📮 문의함 (버디 우체통)
+
+```
+inquiries/{보낸 사람 아이디}/{자동키}
+  ├ authorId, authorName
+  ├ category: "question" | "bug" | "idea" | "etc"
+  ├ title (50자 이하), content (2000자 이하), timestamp
+  ├ status: "new" | "read" | "answered"
+  ├ reply, replyAt            // 관리자만 쓸 수 있음
+  └ userSeen                  // 보낸 사람이 답장을 확인했는지
+```
+
+- 관리자 아이디: `heartBROKENPlaYBoY` (보안 규칙과 메신저 코드의 `BUDDY_ADMIN_ID` 둘 다에 적혀 있음)
+- 관리자: 모든 편지 읽기/답장/삭제. 보낸 사람: 자기 편지만 읽기/삭제, 답장 확인 표시만 가능
+
 ## 미니홈피
 
 홈피 주소: `https://k2w0.github.io/buddybudddy-home/?uid={아이디}`
