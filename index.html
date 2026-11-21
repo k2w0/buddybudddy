@@ -623,6 +623,155 @@
       text-align: center;
     }
 
+    /* ===== 가위바위보 충전 창 ===== */
+    #rps-window {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .rps-box {
+      width: 280px;
+      max-width: 92vw;
+      background: #d4f0ea;
+      border: 2px solid #52a093;
+      border-radius: 8px;
+      box-shadow: 3px 3px 14px rgba(0, 0, 0, 0.35);
+      padding: 8px;
+      text-align: center;
+      color: #1a525f;
+      font-size: 12px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .rps-title {
+      display: flex;
+      justify-content: space-between;
+      background: linear-gradient(to right, #52a093, #7ccabd);
+      color: #fff;
+      font-weight: bold;
+      padding: 5px 8px;
+      border-radius: 4px 4px 0 0;
+      margin: -2px -2px 8px;
+    }
+
+    .rps-close {
+      cursor: pointer;
+    }
+
+    .rps-goal {
+      font-size: 11px;
+      color: #2e6e63;
+    }
+
+    .rps-score {
+      margin: 6px 0;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .rps-stars {
+      color: #f1a81a;
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-right: 4px;
+    }
+
+    .rps-arena {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      background: #fff;
+      border: 1px solid #a3ded6;
+      border-radius: 6px;
+      padding: 8px 4px;
+    }
+
+    .rps-label {
+      font-size: 10px;
+      color: #6a9a91;
+    }
+
+    .rps-hand {
+      font-size: 42px;
+      line-height: 1.2;
+    }
+
+    .rps-vs {
+      font-weight: bold;
+      color: #c0392b;
+    }
+
+    .rps-result {
+      min-height: 18px;
+      margin: 8px 0;
+      font-weight: bold;
+    }
+
+    .rps-result.win { color: #c0392b; }
+    .rps-result.lose { color: #555; }
+    .rps-result.draw { color: #2e6e63; }
+
+    .rps-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .rps-btn {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #81c7bc;
+      border-radius: 5px;
+      padding: 6px 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: #1a525f;
+      cursor: pointer;
+    }
+
+    .rps-btn span {
+      display: block;
+      font-size: 24px;
+    }
+
+    .rps-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .rps-btn.rps-wide {
+      margin-top: 6px;
+      padding: 6px 10px;
+    }
+
+    .rps-again {
+      display: flex;
+      gap: 6px;
+    }
+
+    .rps-footer {
+      font-size: 11px;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    .phone-charge-btn {
+      margin-left: 4px;
+      padding: 0 5px;
+      font-size: 10px;
+      font-weight: bold;
+      border: 1px solid #f1a81a;
+      background: #fff7e0;
+      color: #b7791f;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
     /* ===== 버디버디폰: 하위 탭 / 내 폰 / 사서함 / 통화 화면 ===== */
     #buddy-phone-screen {
       height: 500px;
@@ -1919,7 +2068,7 @@
         <div class="phone-lcd">
           <div class="phone-lcd-header">
             <span>📶 연결됨</span>
-            <span id="phone-balance-text">잔액: 1,000원</span>
+            <span><span id="phone-balance-text">잔액: 1,000원</span><button class="phone-charge-btn" onclick="openRpsGame()">충전</button></span>
           </div>
           <div class="phone-number-display" id="phone-lcd-number">전화번호를 입력하세요</div>
           <div class="phone-lcd-sub" id="phone-lcd-sub">통화 1번에 100원</div>
@@ -4676,7 +4825,7 @@
           <div>내 버디번호</div>
           <div class="phone-my-num">${myPhoneNumber ? formatBuddyNumber(myPhoneNumber) : '번호 받는 중…'}</div>
           ${info ? `<div class="phone-my-meaning">"${escapeHtml(info.meaning)}"</div><div class="phone-my-src">${escapeHtml(info.source)}</div>` : ''}
-          <div style="margin-top:6px;">💰 잔액 <b>${myPhoneBalance === null ? '…' : myPhoneBalance.toLocaleString('ko-KR')}원</b> <span style="font-size:9px; color:#6a9a91;">(통화 1번 ${PHONE_CALL_COST}원 · 게임으로 충전 준비 중)</span></div>
+          <div style="margin-top:6px;">💰 잔액 <b>${myPhoneBalance === null ? '…' : myPhoneBalance.toLocaleString('ko-KR')}원</b> <span style="font-size:9px; color:#6a9a91;">(통화 1번 ${PHONE_CALL_COST}원)</span> <button class="phone-charge-btn" onclick="openRpsGame()">✊ 가위바위보로 충전</button></div>
         </div>
         <div class="phone-card">
           <div><b>📢 내 인사말</b></div>
@@ -4921,7 +5070,7 @@
           return;
         }
         if (myPhoneBalance === null || myPhoneBalance < PHONE_CALL_COST) {
-          setCallUI({ icon: '💸', status: `잔액이 부족해요.\n(통화 1번 ${PHONE_CALL_COST}원 · 게임으로 충전 준비 중)` });
+          setCallUI({ icon: '💸', status: `잔액이 부족해요.\n가위바위보로 충전해 주세요!`, actions: '<button class="phone-small-btn rec" onclick="hangUpPhone(); openRpsGame();">✊ 충전하러 가기</button>' });
           await phoneSleep(2500);
           if (alive()) endPhoneCall();
           return;
@@ -5109,6 +5258,190 @@
           return result;
         };
       }
+    })();
+  </script>
+  <script>
+    /* =====================================================================
+       가위바위보 충전: 컴퓨터를 3번 이기면 1,000원
+       (보안 규칙: 한 번에 딱 1,000원, 서버 시각 기준 1분에 한 번만)
+       ===================================================================== */
+    const RPS_WIN_GOAL = 3;
+    const RPS_REWARD = 1000;
+    const RPS_COOLDOWN_MS = 60 * 1000;
+    const RPS_HANDS = { scissors: { emoji: '✌️', name: '가위' }, rock: { emoji: '✊', name: '바위' }, paper: { emoji: '🖐️', name: '보' } };
+    const RPS_BEATS = { scissors: 'paper', rock: 'scissors', paper: 'rock' };
+    let rpsState = null;
+    let myLastChargeAt = 0;
+
+    function rpsRandomHand() {
+      const keys = Object.keys(RPS_HANDS);
+      const arr = new Uint32Array(1);
+      (window.crypto || window.msCrypto).getRandomValues(arr);
+      return keys[arr[0] % keys.length];
+    }
+
+    function ensureRpsWindow() {
+      let win = document.getElementById('rps-window');
+      if (win) return win;
+      win = document.createElement('div');
+      win.id = 'rps-window';
+      win.innerHTML = `
+        <div class="rps-box">
+          <div class="rps-title"><span>✊ 가위바위보 충전</span><span class="rps-close" onclick="closeRpsGame()">✕</span></div>
+          <div class="rps-goal">컴퓨터를 <b>${RPS_WIN_GOAL}번</b> 이기면 <b>${RPS_REWARD.toLocaleString('ko-KR')}원</b> 충전!</div>
+          <div class="rps-score" id="rps-score"></div>
+          <div class="rps-arena">
+            <div class="rps-side"><div class="rps-label">컴퓨터</div><div class="rps-hand" id="rps-cpu">❔</div></div>
+            <div class="rps-vs">VS</div>
+            <div class="rps-side"><div class="rps-label">나</div><div class="rps-hand" id="rps-me">❔</div></div>
+          </div>
+          <div class="rps-result" id="rps-result">아래에서 하나를 골라 주세요!</div>
+          <div class="rps-buttons" id="rps-buttons">
+            ${Object.entries(RPS_HANDS).map(([k, h]) => `<button class="rps-btn" data-hand="${k}" onclick="playRps('${k}')"><span>${h.emoji}</span>${h.name}</button>`).join('')}
+          </div>
+          <div class="rps-footer" id="rps-footer"></div>
+        </div>`;
+      document.body.appendChild(win);
+      return win;
+    }
+
+    function openRpsGame() {
+      if (!myUserId) return;
+      const win = ensureRpsWindow();
+      rpsState = { wins: 0, draws: 0, losses: 0, busy: false, done: false };
+      document.getElementById('rps-cpu').textContent = '❔';
+      document.getElementById('rps-me').textContent = '❔';
+      document.getElementById('rps-result').textContent = '아래에서 하나를 골라 주세요!';
+      document.getElementById('rps-result').className = 'rps-result';
+      document.getElementById('rps-footer').innerHTML = '';
+      setRpsButtons(true);
+      updateRpsScore();
+      win.style.display = 'flex';
+    }
+
+    function closeRpsGame() {
+      const win = document.getElementById('rps-window');
+      if (win) win.style.display = 'none';
+      rpsState = null;
+    }
+
+    function setRpsButtons(enabled) {
+      document.querySelectorAll('#rps-buttons .rps-btn').forEach(b => { b.disabled = !enabled; });
+    }
+
+    function updateRpsScore() {
+      if (!rpsState) return;
+      const stars = '★'.repeat(rpsState.wins) + '☆'.repeat(Math.max(0, RPS_WIN_GOAL - rpsState.wins));
+      document.getElementById('rps-score').innerHTML =
+        `<span class="rps-stars">${stars}</span> 승 ${rpsState.wins} · 무 ${rpsState.draws} · 패 ${rpsState.losses}`;
+    }
+
+    async function playRps(hand) {
+      const st = rpsState;
+      if (!st || st.busy || st.done || !RPS_HANDS[hand]) return;
+      st.busy = true;
+      setRpsButtons(false);
+      const cpuEl = document.getElementById('rps-cpu');
+      const meEl = document.getElementById('rps-me');
+      const resEl = document.getElementById('rps-result');
+      meEl.textContent = RPS_HANDS[hand].emoji;
+      resEl.className = 'rps-result';
+      resEl.textContent = '가위… 바위… 보!';
+      // 컴퓨터 손 섞기
+      const order = ['scissors', 'rock', 'paper'];
+      for (let i = 0; i < 6; i++) {
+        cpuEl.textContent = RPS_HANDS[order[i % 3]].emoji;
+        await new Promise(r => setTimeout(r, 90));
+      }
+      if (st !== rpsState) return;
+      const cpu = rpsRandomHand();
+      cpuEl.textContent = RPS_HANDS[cpu].emoji;
+      if (cpu === hand) {
+        st.draws++;
+        resEl.textContent = '비겼어요! 한 번 더!';
+        resEl.className = 'rps-result draw';
+      } else if (RPS_BEATS[hand] === cpu) {
+        st.wins++;
+        resEl.textContent = `이겼어요! 🎉 (${st.wins}/${RPS_WIN_GOAL})`;
+        resEl.className = 'rps-result win';
+      } else {
+        st.losses++;
+        resEl.textContent = '졌어요… 다시 도전!';
+        resEl.className = 'rps-result lose';
+      }
+      updateRpsScore();
+      st.busy = false;
+      if (st.wins >= RPS_WIN_GOAL) {
+        st.done = true;
+        await chargeFromRps();
+      } else {
+        setRpsButtons(true);
+      }
+    }
+
+    async function chargeFromRps() {
+      const resEl = document.getElementById('rps-result');
+      const footer = document.getElementById('rps-footer');
+      const wait = myLastChargeAt ? RPS_COOLDOWN_MS - (Date.now() - myLastChargeAt) : 0;
+      if (wait > 1000) {
+        resEl.textContent = '🎉 3번 이겼어요!';
+        resEl.className = 'rps-result win';
+        footer.innerHTML = `충전은 1분에 한 번만 돼요.<br><span id="rps-wait">${Math.ceil(wait / 1000)}</span>초 뒤에 충전 버튼을 눌러 주세요.
+          <div><button class="rps-btn rps-wide" id="rps-charge-btn" disabled>💰 ${RPS_REWARD.toLocaleString('ko-KR')}원 받기</button></div>`;
+        const timer = setInterval(() => {
+          const left = Math.ceil((RPS_COOLDOWN_MS - (Date.now() - myLastChargeAt)) / 1000);
+          const w = document.getElementById('rps-wait');
+          const b = document.getElementById('rps-charge-btn');
+          if (!w || !b || !rpsState) { clearInterval(timer); return; }
+          if (left <= 0) {
+            clearInterval(timer);
+            w.textContent = '0';
+            b.disabled = false;
+          } else {
+            w.textContent = left;
+          }
+        }, 500);
+        document.getElementById('rps-charge-btn').onclick = () => { clearInterval(timer); chargeFromRps(); };
+        return;
+      }
+      resEl.textContent = '🎉 3번 이겼어요! 충전 중…';
+      resEl.className = 'rps-result win';
+      footer.innerHTML = '';
+      try {
+        const balance = typeof myPhoneBalance === 'number' ? myPhoneBalance : 0;
+        await database.ref('phone_wallet/' + myUserId).update({
+          balance: balance + RPS_REWARD,
+          lastChargeAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        myLastChargeAt = Date.now();
+        resEl.textContent = `💰 ${RPS_REWARD.toLocaleString('ko-KR')}원 충전 완료!`;
+        footer.innerHTML = `지금 잔액: <b>${(balance + RPS_REWARD).toLocaleString('ko-KR')}원</b>
+          <div class="rps-again"><button class="rps-btn rps-wide" onclick="openRpsGame()">한 판 더</button><button class="rps-btn rps-wide" onclick="closeRpsGame()">닫기</button></div>`;
+      } catch (e) {
+        resEl.textContent = '충전하지 못했어요';
+        footer.innerHTML = `충전은 1분에 한 번만 돼요. 잠시 뒤에 다시 눌러 주세요.
+          <div><button class="rps-btn rps-wide" onclick="chargeFromRps()">💰 다시 받기</button></div>`;
+      }
+    }
+
+    // 마지막 충전 시각도 같이 지켜봐요 (1분 대기 안내용)
+    (function wireRps() {
+      const originalStart = window.startBuddyPhone;
+      window.startBuddyPhone = async function () {
+        const result = await originalStart.apply(this, arguments);
+        if (myUserId) {
+          const ref = database.ref('phone_wallet/' + myUserId + '/lastChargeAt');
+          ref.on('value', s => { myLastChargeAt = typeof s.val() === 'number' ? s.val() : 0; });
+          phoneRefs.push(ref);
+        }
+        return result;
+      };
+      const originalStop = window.stopBuddyPhone;
+      window.stopBuddyPhone = function () {
+        closeRpsGame();
+        myLastChargeAt = 0;
+        return originalStop.apply(this, arguments);
+      };
     })();
   </script>
 </body>

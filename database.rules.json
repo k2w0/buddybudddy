@@ -244,9 +244,12 @@
       "$uid": {
         ".read": "auth != null && root.child('id_owners/' + $uid).val() === auth.uid",
         ".write": "auth != null && root.child('id_owners/' + $uid).val() === auth.uid && (newData.exists() || !newData.parent().parent().child('id_owners/' + $uid).exists())",
-        ".validate": "newData.hasChildren(['balance'])",
+        ".validate": "newData.hasChildren(['balance']) && (!data.child('lastChargeAt').exists() || newData.child('lastChargeAt').exists())",
         "balance": {
-          ".validate": "newData.isNumber() && newData.val() >= 0 && (data.exists() ? newData.val() <= data.val() : newData.val() === 1000)"
+          ".validate": "newData.isNumber() && newData.val() >= 0 && (data.exists() ? (newData.val() <= data.val() || (newData.val() === data.val() + 1000 && newData.parent().child('lastChargeAt').val() === now && (!data.parent().child('lastChargeAt').exists() || now - data.parent().child('lastChargeAt').val() >= 60000))) : newData.val() === 1000)"
+        },
+        "lastChargeAt": {
+          ".validate": "newData.isNumber() && (newData.val() === data.val() || (newData.val() === now && newData.parent().child('balance').val() === data.parent().child('balance').val() + 1000))"
         },
         "$other": {
           ".validate": false
