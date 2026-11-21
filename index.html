@@ -623,6 +623,315 @@
       text-align: center;
     }
 
+    /* ===== 버디버디폰: 하위 탭 / 내 폰 / 사서함 / 통화 화면 ===== */
+    #buddy-phone-screen {
+      height: 500px;
+    }
+
+    .phone-subtabs {
+      display: flex;
+      gap: 3px;
+      margin-top: 6px;
+    }
+
+    .phone-subtab {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 0;
+      color: #2e6e63;
+      background: #e3f8f5;
+      border: 1px solid #81c7bc;
+      border-radius: 4px 4px 0 0;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .phone-subtab.active {
+      background: #52a093;
+      color: #fff;
+    }
+
+    .phone-badge {
+      display: inline-block;
+      min-width: 14px;
+      margin-left: 3px;
+      padding: 0 3px;
+      border-radius: 7px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 9px;
+      line-height: 14px;
+    }
+
+    .phone-view {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-view .phone-lcd {
+      margin: 6px 0;
+    }
+
+    .phone-lcd-sub {
+      font-size: 10px;
+      color: #4b8a7f;
+      text-align: right;
+      min-height: 13px;
+    }
+
+    #buddy-phone-screen .key-btn {
+      height: 34px;
+    }
+
+    .phone-book-btn {
+      width: 100%;
+      font-size: 11px;
+      padding: 4px 0;
+      border: 1px solid #81c7bc;
+      background: #fff;
+      color: #2e6e63;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .phone-card {
+      background: #e3f8f5;
+      border: 1px solid #81c7bc;
+      border-radius: 4px;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #2e6e63;
+    }
+
+    .phone-my-num {
+      font-size: 17px;
+      font-weight: bold;
+      color: #0b5e75;
+      letter-spacing: 1px;
+      margin: 2px 0;
+    }
+
+    .phone-my-meaning {
+      font-size: 12px;
+      font-weight: bold;
+      color: #c0392b;
+    }
+
+    .phone-my-src {
+      font-size: 9px;
+      color: #6a9a91;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .phone-btn-row {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .phone-small-btn {
+      flex: 1;
+      min-width: 70px;
+      font-size: 11px;
+      padding: 4px 2px;
+      border: 1px solid #81c7bc;
+      background: #fff;
+      color: #1a525f;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .phone-small-btn.rec {
+      color: #c0392b;
+      font-weight: bold;
+    }
+
+    .phone-hint {
+      font-size: 9px;
+      color: #6a9a91;
+      line-height: 1.5;
+      margin-top: 5px;
+    }
+
+    .phone-vm-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #fff;
+      border: 1px solid #a3ded6;
+      border-radius: 3px;
+      padding: 5px 6px;
+      margin-top: 4px;
+      font-size: 11px;
+      color: #1a525f;
+    }
+
+    .phone-vm-item.unread {
+      font-weight: bold;
+      border-color: #52a093;
+    }
+
+    .phone-vm-item .vm-text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .phone-vm-item .vm-date {
+      font-size: 9px;
+      color: #6a9a91;
+      font-weight: normal;
+      display: block;
+    }
+
+    .phone-vm-item button {
+      font-size: 11px;
+      padding: 2px 5px;
+      border: 1px solid #81c7bc;
+      background: #f4fbfa;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .phone-empty {
+      text-align: center;
+      color: #6a9a91;
+      font-size: 11px;
+      padding: 30px 0;
+    }
+
+    .phone-overlay {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: 34px;
+      bottom: 8px;
+      background: #d4f0ea;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    #phone-call-overlay {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 6px;
+      background: linear-gradient(to bottom, #d4f0ea, #b8e2d9);
+      border-radius: 4px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .phone-call-icon {
+      font-size: 34px;
+    }
+
+    .phone-call-icon.ringing {
+      animation: phoneRing 1s infinite;
+    }
+
+    @keyframes phoneRing {
+      0%, 100% { transform: rotate(0deg); }
+      10%, 30% { transform: rotate(-14deg); }
+      20%, 40% { transform: rotate(14deg); }
+      50% { transform: rotate(0deg); }
+    }
+
+    .phone-call-number {
+      font-size: 15px;
+      font-weight: bold;
+      color: #0b5e75;
+      letter-spacing: 1px;
+    }
+
+    .phone-call-name {
+      font-size: 12px;
+      color: #2e6e63;
+      font-weight: bold;
+      min-height: 16px;
+    }
+
+    .phone-call-status {
+      font-size: 12px;
+      color: #1a525f;
+      line-height: 1.5;
+      min-height: 36px;
+      white-space: pre-line;
+    }
+
+    .phone-call-actions {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .phone-hangup-btn {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 7px 22px;
+      border: 1px solid #b03a2e;
+      background: #e74c3c;
+      color: #fff;
+      border-radius: 18px;
+      cursor: pointer;
+    }
+
+    .phone-book-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #a3ded6;
+      border-radius: 3px;
+      padding: 6px;
+      margin-top: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      color: #1a525f;
+    }
+
+    .phone-book-row b {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .phone-book-row span {
+      font-size: 10px;
+      color: #0b5e75;
+      white-space: nowrap;
+    }
+
+    .phone-tab-badge {
+      display: inline-block;
+      margin-left: 3px;
+      min-width: 14px;
+      padding: 0 3px;
+      border-radius: 7px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 9px;
+      line-height: 14px;
+      vertical-align: middle;
+    }
+
     /* 1:1 대화 화면 */
     #chat-screen {
       width: 530px;
@@ -1601,35 +1910,55 @@
         <span>📞 버디버디폰</span>
         <span style="cursor:pointer;" onclick="toggleBuddyPhone(false)">✕</span>
       </div>
-      <div class="phone-lcd">
-        <div class="phone-lcd-header">
-          <span>📶 연결됨</span>
-          <span>잔액: 1,000원</span>
-        </div>
-        <div class="phone-number-display" id="phone-lcd-number">전화번호를 입력하세요</div>
+      <div class="phone-subtabs">
+        <div class="phone-subtab active" id="phone-subtab-dial" onclick="showPhoneView('dial')">키패드</div>
+        <div class="phone-subtab" id="phone-subtab-me" onclick="showPhoneView('me')">내 폰</div>
+        <div class="phone-subtab" id="phone-subtab-vm" onclick="showPhoneView('vm')">사서함<span id="phone-vm-badge" class="phone-badge" style="display:none;"></span></div>
       </div>
-      <div class="phone-keypad-container">
-        <div class="phone-keypad-grid">
-          <div class="key-btn" onclick="pressPhoneKey('1')">1</div>
-          <div class="key-btn" onclick="pressPhoneKey('2')">2</div>
-          <div class="key-btn" onclick="pressPhoneKey('3')">3</div>
-          <div class="key-btn" onclick="pressPhoneKey('4')">4</div>
-          <div class="key-btn" onclick="pressPhoneKey('5')">5</div>
-          <div class="key-btn" onclick="pressPhoneKey('6')">6</div>
-          <div class="key-btn" onclick="pressPhoneKey('7')">7</div>
-          <div class="key-btn" onclick="pressPhoneKey('8')">8</div>
-          <div class="key-btn" onclick="pressPhoneKey('9')">9</div>
-          <div class="key-btn" onclick="pressPhoneKey('*')">*</div>
-          <div class="key-btn" onclick="pressPhoneKey('0')">0</div>
-          <div class="key-btn" onclick="pressPhoneKey('#')">#</div>
+      <div id="phone-view-dial" class="phone-view">
+        <div class="phone-lcd">
+          <div class="phone-lcd-header">
+            <span>📶 연결됨</span>
+            <span id="phone-balance-text">잔액: 1,000원</span>
+          </div>
+          <div class="phone-number-display" id="phone-lcd-number">전화번호를 입력하세요</div>
+          <div class="phone-lcd-sub" id="phone-lcd-sub">통화 1번에 100원</div>
         </div>
-        <div class="phone-call-btns">
-          <button class="phone-action-btn" style="background:#e8f8f5; color:#27ae60;"
-            onclick="makePhoneCall()">통화</button>
-          <button class="phone-action-btn" onclick="backspacePhoneNum()">← 지우기</button>
-          <button class="phone-action-btn" style="background:#fde8e8; color:#e74c3c;"
-            onclick="clearPhoneNum()">초기화</button>
+        <div class="phone-keypad-container">
+          <div class="phone-keypad-grid">
+            <div class="key-btn" onclick="pressPhoneKey('1')">1</div>
+            <div class="key-btn" onclick="pressPhoneKey('2')">2</div>
+            <div class="key-btn" onclick="pressPhoneKey('3')">3</div>
+            <div class="key-btn" onclick="pressPhoneKey('4')">4</div>
+            <div class="key-btn" onclick="pressPhoneKey('5')">5</div>
+            <div class="key-btn" onclick="pressPhoneKey('6')">6</div>
+            <div class="key-btn" onclick="pressPhoneKey('7')">7</div>
+            <div class="key-btn" onclick="pressPhoneKey('8')">8</div>
+            <div class="key-btn" onclick="pressPhoneKey('9')">9</div>
+            <div class="key-btn" onclick="pressPhoneKey('*')">*</div>
+            <div class="key-btn" onclick="pressPhoneKey('0')">0</div>
+            <div class="key-btn" onclick="pressPhoneKey('#')">#</div>
+          </div>
+          <div class="phone-call-btns">
+            <button class="phone-action-btn" style="background:#e8f8f5; color:#27ae60;"
+              onclick="makePhoneCall()">통화</button>
+            <button class="phone-action-btn" onclick="backspacePhoneNum()">← 지우기</button>
+            <button class="phone-action-btn" style="background:#fde8e8; color:#e74c3c;"
+              onclick="clearPhoneNum()">초기화</button>
+          </div>
+          <button class="phone-book-btn" onclick="openPhoneBook()">👥 친구 번호부</button>
         </div>
+      </div>
+      <div id="phone-view-me" class="phone-view" style="display:none;"></div>
+      <div id="phone-view-vm" class="phone-view" style="display:none;"></div>
+      <div id="phone-book" class="phone-overlay" style="display:none;"></div>
+      <div id="phone-call-overlay" class="phone-overlay" style="display:none;">
+        <div class="phone-call-icon" id="phone-call-icon">📞</div>
+        <div class="phone-call-number" id="phone-call-number"></div>
+        <div class="phone-call-name" id="phone-call-name"></div>
+        <div class="phone-call-status" id="phone-call-status"></div>
+        <div class="phone-call-actions" id="phone-call-actions"></div>
+        <button class="phone-hangup-btn" onclick="hangUpPhone()">📵 끊기</button>
       </div>
     </div>
   </div>
@@ -1723,6 +2052,7 @@
             </div>
             <div class="info-item"><label>나이:</label><input type="text" id="edit-age" placeholder="비공개"></div>
             <div class="info-item"><label>지역:</label><input type="text" id="edit-region" placeholder="서울"></div>
+            <div class="info-item"><label>버디번호:</label><input type="text" id="edit-buddy-number" readonly style="background:#eee;"></div>
           </div>
           <div class="bio-box">
             <label>◇ 자기소개:</label>
@@ -1913,6 +2243,8 @@
             <div class="info-item"><label>성별:</label><input type="text" id="view-friend-gender" readonly
                 style="background:#eee;"></div>
             <div class="info-item"><label>지역:</label><input type="text" id="view-friend-region" readonly
+                style="background:#eee;"></div>
+            <div class="info-item"><label>버디번호:</label><input type="text" id="view-friend-buddy-number" readonly
                 style="background:#eee;"></div>
           </div>
           <div class="bio-box">
@@ -2627,46 +2959,6 @@
           switchTab('friend');
         }
       }
-    }
-
-    function pressPhoneKey(key) {
-      typedPhoneNum += key;
-      document.getElementById('phone-lcd-number').textContent = typedPhoneNum;
-    }
-
-    function backspacePhoneNum() {
-      if (typedPhoneNum.length > 0) {
-        typedPhoneNum = typedPhoneNum.slice(0, -1);
-      }
-      document.getElementById('phone-lcd-number').textContent = typedPhoneNum || "전화번호를 입력하세요";
-    }
-
-    function clearPhoneNum() {
-      typedPhoneNum = "";
-      document.getElementById('phone-lcd-number').textContent = "전화번호를 입력하세요";
-    }
-
-    // 📞 통화 버튼 클릭 시 LCD에 직접 상태 표시
-    function makePhoneCall() {
-      const lcdDisplay = document.getElementById('phone-lcd-number');
-
-      if (!typedPhoneNum) {
-        lcdDisplay.textContent = "번호를 입력하세요";
-        setTimeout(() => {
-          lcdDisplay.textContent = "전화번호를 입력하세요";
-        }, 1500);
-        return;
-      }
-
-      const originalNum = typedPhoneNum;
-      lcdDisplay.textContent = "통화 연결 시도 중...";
-
-      setTimeout(() => {
-        lcdDisplay.textContent = "통화가 연결되지 않았습니다";
-        setTimeout(() => {
-          lcdDisplay.textContent = originalNum;
-        }, 1500);
-      }, 3000);
     }
 
     // 4. 상태 변경 및 실시간 동기화
@@ -3636,6 +3928,15 @@
         updates['minihompy/' + inputId] = null;
         updates['hompy_private/' + inputId] = null;
         updates['hompy_open/' + inputId] = null;
+        updates['user_phone/' + inputId] = null;
+        updates['phone_greetings/' + inputId] = null;
+        updates['voicemail/' + inputId] = null;
+        updates['phone_wallet/' + inputId] = null;
+        try {
+          const myNum = (await database.ref('user_phone/' + inputId).once('value')).val();
+          if (myNum) updates['phone_numbers/' + myNum] = null;
+        } catch (e) { }
+        if (typeof stopBuddyPhone === 'function') stopBuddyPhone();
         updates['global_users/' + inputId] = null;
         updates['owners_by_uid/' + user.uid] = null;
         updates['id_owners/' + inputId] = null;
@@ -3929,6 +4230,885 @@
           e.stopImmediatePropagation();
         }
       }, true);
+    })();
+  </script>
+  <script>
+    /* 버디 번호: 000-XXXX-XXXX 의 8자리 = 중국 숫자 암호 · 삐삐 번호를 이어 붙인 말
+       (뜻이 널리 알려진 것만 골랐어요. 다 쓰이면 그다음부터는 랜덤 번호) */
+    const BUDDY_NUMBER_BOOK = [
+      ['53053020', '너무너무 보고 싶어, 사랑해', '530 我想你(보고 싶어) · 530 · 20 爱你(사랑해)'],
+      ['55552088', '흑흑… 사랑해, 안녕', '555 呜呜呜(흑흑) · 520 我爱你(사랑해) · 88 拜拜(안녕)'],
+      ['88655520', '잘 가… 흑흑, 사랑해', '886 拜拜了(잘 가) · 555 呜呜呜(흑흑) · 20 爱你(사랑해)'],
+      ['36053088', '그리워, 보고 싶어… 안녕', '360 想念你(그리워) · 530 我想你(보고 싶어) · 88 拜拜(안녕)'],
+      ['17171771', 'I LOVE YOU', '삐삐 번호 17171771 (I LOVE YOU)'],
+      ['72153020', '자기야, 보고 싶어, 사랑해', '721 亲爱的(자기야) · 530 我想你(보고 싶어) · 20 爱你(사랑해)'],
+      ['72188020', '자기야, 꼭 안아 줄게, 사랑해', '721 亲爱的(자기야) · 880 抱抱你(안아 줄게) · 20 爱你(사랑해)'],
+      ['72158420', '자기야, 맹세해, 사랑해', '721 亲爱的(자기야) · 584 我发誓(맹세해) · 20 爱你(사랑해)'],
+      ['58452020', '맹세해, 사랑해 사랑해', '584 我发誓(맹세해) · 520 我爱你(사랑해) · 20 爱你(사랑해)'],
+      ['53088088', '보고 싶어, 안아 줄게, 안녕', '530 我想你(보고 싶어) · 880 抱抱你(안아 줄게) · 88 拜拜(안녕)'],
+      ['94201314', '그냥 너를 사랑해, 평생토록', '9420 就是爱你(그냥 너를 사랑해) · 1314 一生一世(평생토록)'],
+      ['94203344', '그냥 너를 사랑해, 영원히', '9420 就是爱你(그냥 너를 사랑해) · 3344 生生世世(영원히)'],
+      ['19201314', '여전히 사랑해, 평생토록', '1920 依旧爱你(여전히 사랑해) · 1314 一生一世(평생토록)'],
+      ['20143344', '평생 사랑해, 영원히', '2014 爱你一世(평생 사랑해) · 3344 生生世世(영원히)'],
+      ['80133399', '평생 곁에 있을게, 오래오래', '8013 伴你一生(평생 곁에 있을게) · 3399 长长久久(오래오래)'],
+      ['80139420', '평생 곁에 있을게, 그냥 너를 사랑해', '8013 伴你一生(평생 곁에 있을게) · 9420 就是爱你(그냥 너를 사랑해)'],
+      ['17113399', '한마음 한뜻으로 오래오래', '1711 一心一意(한마음 한뜻) · 3399 长长久久(오래오래)'],
+      ['17112014', '한마음 한뜻으로 평생 사랑해', '1711 一心一意(한마음 한뜻) · 2014 爱你一世(평생 사랑해)'],
+      ['77589277', '뽀뽀해 줘, 뽀뽀가 좋아', '7758 亲亲我吧(뽀뽀해 줘) · 9277 就爱亲亲(뽀뽀가 좋아)'],
+      ['82827758', '빨리빨리 뽀뽀해 줘', '삐삐 8282(빨리빨리) · 7758 亲亲我吧(뽀뽀해 줘)'],
+      ['10049420', '천사야, 그냥 너를 사랑해', '삐삐 1004(천사) · 9420 就是爱你(그냥 너를 사랑해)'],
+      ['10041920', '천사야, 여전히 사랑해', '삐삐 1004(천사) · 1920 依旧爱你(여전히 사랑해)'],
+      ['10048282', '천사야, 빨리빨리 와 줘', '삐삐 1004(천사) · 삐삐 8282(빨리빨리)'],
+      ['79423399', '친구사이, 오래오래', '삐삐 7942(친구사이) · 3399 长长久久(오래오래)'],
+      ['79423344', '친구사이, 영원히', '삐삐 7942(친구사이) · 3344 生生世世(영원히)'],
+      ['48648620', '사랑해 사랑해 사랑해', '삐삐 486(사랑해) · 486 · 20 爱你(사랑해)']
+    ];
+
+    /* =====================================================================
+       버디버디폰
+       - 내 번호: 000-XXXX-XXXX (8자리는 숫자 암호 문장, 자동 배정, 한 번 정하면 고정)
+       - 통화: 친구 번호로 걸면 진짜 통화연결음(뚜르르) → 친구 인사말 → 삐 → 음성사서함 녹음
+       - 잔액: 처음 1,000원, 연결된 통화 1번에 100원 (보안 규칙상 늘릴 수는 없음, 게임으로 충전 예정)
+       - 소리 파일은 데이터베이스에 저장해요: 인사말 60초 · 1MB, 음성 메시지 30초까지
+       ===================================================================== */
+    const PHONE_CALL_COST = 100;
+    const PHONE_GREETING_MAX_SEC = 30;
+    const PHONE_GREETING_FILE_MAX_SEC = 60;
+    const PHONE_GREETING_FILE_MAX_BYTES = 1024 * 1024;
+    const PHONE_VM_MAX_SEC = 30;
+
+    let myPhoneNumber = null;
+    let myPhoneBalance = null;
+    let myGreeting = null;
+    let phoneVoicemails = {};
+    let phoneVmLoaded = false;
+    let phoneRefs = [];
+    let phoneView = 'dial';
+    let phoneCallToken = 0;
+    let phoneInCall = false;
+    let phoneRecorder = null;
+    let phoneVmDraft = null;
+    let phoneAudioCtx = null;
+    let phoneToneNodes = [];
+    let phonePlayback = null;
+    let phoneGreetingRecording = false;
+
+    function formatBuddyNumber(digits) {
+      const d = String(digits || '').replace(/\D/g, '');
+      if (d.length === 8) return `000-${d.slice(0, 4)}-${d.slice(4)}`;
+      return d;
+    }
+
+    function buddyNumberInfo(digits) {
+      const hit = BUDDY_NUMBER_BOOK.find(([n]) => n === digits);
+      return hit ? { meaning: hit[1], source: hit[2] } : null;
+    }
+
+    function formatTypedPhone(d) {
+      if (!d) return '';
+      if (d.startsWith('000')) {
+        if (d.length <= 3) return d;
+        if (d.length <= 7) return `000-${d.slice(3)}`;
+        return `000-${d.slice(3, 7)}-${d.slice(7, 11)}`;
+      }
+      if (d.length <= 4) return d;
+      return `${d.slice(0, 4)}-${d.slice(4, 8)}`;
+    }
+
+    function dialTarget() {
+      const d = typedPhoneNum.replace(/\D/g, '');
+      if (d.length === 11 && d.startsWith('000')) return d.slice(3);
+      if (d.length === 8 && !d.startsWith('000')) return d;
+      return null;
+    }
+
+    function phoneMmSs(sec) {
+      sec = Math.max(0, Math.round(sec));
+      return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+    }
+
+    function phoneSleep(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    /* ---------- 키패드 ---------- */
+    function pressPhoneKey(key) {
+      if (!/^[0-9]$/.test(key)) return;
+      const d = typedPhoneNum.replace(/\D/g, '');
+      if (d.length >= 11) return;
+      typedPhoneNum = d + key;
+      updatePhoneLcd();
+    }
+
+    function backspacePhoneNum() {
+      typedPhoneNum = typedPhoneNum.replace(/\D/g, '').slice(0, -1);
+      updatePhoneLcd();
+    }
+
+    function clearPhoneNum() {
+      typedPhoneNum = '';
+      updatePhoneLcd();
+    }
+
+    function updatePhoneLcd(message) {
+      const lcd = document.getElementById('phone-lcd-number');
+      const sub = document.getElementById('phone-lcd-sub');
+      if (!lcd) return;
+      lcd.textContent = message || formatTypedPhone(typedPhoneNum) || '전화번호를 입력하세요';
+      if (sub) {
+        const target = dialTarget();
+        const info = target ? buddyNumberInfo(target) : null;
+        sub.textContent = info ? `💬 ${info.meaning}` : `통화 1번에 ${PHONE_CALL_COST}원`;
+      }
+    }
+
+    function flashPhoneLcd(message) {
+      updatePhoneLcd(message);
+      setTimeout(() => updatePhoneLcd(), 1600);
+    }
+
+    function updatePhoneBalance() {
+      const el = document.getElementById('phone-balance-text');
+      if (el) el.textContent = `잔액: ${myPhoneBalance === null ? '…' : myPhoneBalance.toLocaleString('ko-KR')}원`;
+    }
+
+    /* ---------- 하위 탭 ---------- */
+    function showPhoneView(view) {
+      phoneView = view;
+      ['dial', 'me', 'vm'].forEach(v => {
+        document.getElementById('phone-view-' + v).style.display = v === view ? '' : 'none';
+        document.getElementById('phone-subtab-' + v).classList.toggle('active', v === view);
+      });
+      closePhoneBook();
+      if (view === 'me') renderPhoneMe();
+      if (view === 'vm') renderPhoneVoicemails();
+    }
+
+    /* ---------- 소리: 통화연결음 · 없는 번호 · 삐 ---------- */
+    function getPhoneAudioCtx() {
+      if (!phoneAudioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        phoneAudioCtx = new Ctx();
+      }
+      if (phoneAudioCtx.state === 'suspended') phoneAudioCtx.resume().catch(() => { });
+      return phoneAudioCtx;
+    }
+
+    // freqs 를 onMs 동안 울리고 offMs 쉬기를 cycles 번
+    function playPhoneTone(freqs, onMs, offMs, cycles, volume) {
+      const ctx = getPhoneAudioCtx();
+      const total = cycles * (onMs + offMs);
+      if (ctx) {
+        const start = ctx.currentTime + 0.05;
+        for (let i = 0; i < cycles; i++) {
+          const t0 = start + i * (onMs + offMs) / 1000;
+          const t1 = t0 + onMs / 1000;
+          freqs.forEach(f => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.value = f;
+            gain.gain.setValueAtTime(0, t0);
+            gain.gain.linearRampToValueAtTime(volume || 0.07, t0 + 0.02);
+            gain.gain.setValueAtTime(volume || 0.07, t1 - 0.02);
+            gain.gain.linearRampToValueAtTime(0, t1);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(t0);
+            osc.stop(t1 + 0.01);
+            phoneToneNodes.push(osc);
+          });
+        }
+      }
+      return phoneSleep(total);
+    }
+
+    function stopPhoneTones() {
+      phoneToneNodes.forEach(o => { try { o.stop(); } catch (e) { } });
+      phoneToneNodes = [];
+    }
+
+    // 한국 통화연결음: 440Hz + 480Hz, 1초 울리고 2초 쉼
+    const phoneRingback = (cycles) => playPhoneTone([440, 480], 1000, 2000, cycles);
+    // 통화 중/없는 번호 신호: 480Hz + 620Hz, 0.5초씩
+    const phoneBusyTone = (cycles) => playPhoneTone([480, 620], 500, 500, cycles);
+    // 삐—
+    const phoneBeep = () => playPhoneTone([1000], 600, 200, 1, 0.09);
+
+    function phoneSpeak(text) {
+      return new Promise(resolve => {
+        if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+          setTimeout(resolve, Math.min(8000, 1500 + text.length * 120));
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'ko-KR';
+        u.rate = 1;
+        const voice = (speechSynthesis.getVoices() || []).find(v => /^ko/i.test(v.lang));
+        if (voice) u.voice = voice;
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        u.onend = finish;
+        u.onerror = finish;
+        setTimeout(finish, Math.min(15000, 2500 + text.length * 160));
+        try { speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { finish(); }
+      });
+    }
+
+    // 소리 데이터(data URL) 재생: 통화 중에는 이미 깨워 둔 AudioContext로 틀어서 아이폰에서도 나오게
+    function playPhoneAudio(dataUrl) {
+      stopPhonePlayback();
+      return new Promise(async (resolve) => {
+        const ctx = getPhoneAudioCtx();
+        let finished = false;
+        const finish = () => { if (!finished) { finished = true; phonePlayback = null; resolve(); } };
+        try {
+          if (!ctx) throw new Error('no audio ctx');
+          const buf = await (await fetch(dataUrl)).arrayBuffer();
+          const audioBuf = await new Promise((ok, bad) => {
+            const p = ctx.decodeAudioData(buf, ok, bad);
+            if (p && p.then) p.then(ok, bad);
+          });
+          const src = ctx.createBufferSource();
+          src.buffer = audioBuf;
+          src.connect(ctx.destination);
+          src.onended = finish;
+          phonePlayback = { stop: () => { try { src.stop(); } catch (e) { } finish(); } };
+          src.start();
+        } catch (e) {
+          const audio = new Audio(dataUrl);
+          audio.onended = finish;
+          audio.onerror = finish;
+          phonePlayback = { stop: () => { audio.pause(); finish(); } };
+          audio.play().catch(finish);
+        }
+      });
+    }
+
+    function stopPhonePlayback() {
+      if (phonePlayback) phonePlayback.stop();
+      phonePlayback = null;
+      if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch (e) { } }
+    }
+
+    /* ---------- 녹음 ---------- */
+    function pickRecordMime() {
+      if (typeof MediaRecorder === 'undefined') return null;
+      const options = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg;codecs=opus'];
+      return options.find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+    }
+
+    async function startPhoneRecording(maxSec, onTick) {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+        throw new Error('이 브라우저는 녹음을 지원하지 않아요');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = pickRecordMime();
+      const rec = new MediaRecorder(stream, mime ? { mimeType: mime, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 });
+      const chunks = [];
+      const started = Date.now();
+      let stopResolve;
+      const stopped = new Promise(r => { stopResolve = r; });
+      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        stopResolve();
+      };
+      rec.start(250);
+      const tick = setInterval(() => {
+        const sec = (Date.now() - started) / 1000;
+        if (onTick) onTick(sec);
+        if (sec >= maxSec) controller.stop();
+      }, 200);
+      const controller = {
+        cancelled: false,
+        stop: async () => {
+          clearInterval(tick);
+          if (rec.state !== 'inactive') rec.stop();
+          await stopped;
+          if (controller.cancelled) return null;
+          const duration = Math.min(maxSec, Math.max(1, Math.round((Date.now() - started) / 1000)));
+          const type = (rec.mimeType || mime || 'audio/webm').split(';')[0];
+          const blob = new Blob(chunks, { type });
+          const dataUrl = await new Promise((ok, bad) => {
+            const fr = new FileReader();
+            fr.onload = () => ok(fr.result);
+            fr.onerror = bad;
+            fr.readAsDataURL(blob);
+          });
+          return { dataUrl, duration: Math.min(duration, maxSec) };
+        },
+        cancel: () => {
+          controller.cancelled = true;
+          clearInterval(tick);
+          if (rec.state !== 'inactive') rec.stop();
+          stream.getTracks().forEach(t => t.stop());
+        }
+      };
+      return controller;
+    }
+
+    /* ---------- 내 번호 · 잔액 · 사서함 시작 ---------- */
+    async function ensureMyPhoneNumber() {
+      const me = myUserId;
+      const mine = (await database.ref('user_phone/' + me).once('value')).val();
+      if (mine) return mine;
+      const candidates = BUDDY_NUMBER_BOOK.map(([n]) => n).sort(() => Math.random() - 0.5);
+      for (let i = 0; i < 25; i++) {
+        candidates.push(String(Math.floor(10000000 + Math.random() * 90000000)));
+      }
+      for (const num of candidates) {
+        if (me !== myUserId) return null;
+        const taken = (await database.ref('phone_numbers/' + num).once('value')).val();
+        if (taken) continue;
+        try {
+          await database.ref().update({ ['phone_numbers/' + num]: me, ['user_phone/' + me]: num });
+          return num;
+        } catch (e) {
+          // 그사이 내 다른 창이 먼저 번호를 받았으면 그 번호를 써요
+          const already = (await database.ref('user_phone/' + me).once('value')).val();
+          if (already) return already;
+          // 아니면 다른 사람이 그 번호를 가져간 것 → 다음 번호로
+        }
+      }
+      return null;
+    }
+
+    let phoneStartToken = 0;
+    async function startBuddyPhone() {
+      stopBuddyPhone();
+      const run = ++phoneStartToken;
+      const me = myUserId;
+      if (!me) return;
+      let num = null;
+      try {
+        num = await ensureMyPhoneNumber();
+      } catch (e) {
+        console.warn('버디 번호를 받지 못했어요', e);
+      }
+      // 그사이 다시 시작됐거나 로그아웃했으면 이번 실행은 그만
+      if (run !== phoneStartToken || me !== myUserId) return;
+      myPhoneNumber = num;
+
+      const walletRef = database.ref('phone_wallet/' + me + '/balance');
+      try {
+        const snap = await walletRef.once('value');
+        if (snap.val() === null) await database.ref('phone_wallet/' + me).set({ balance: 1000 });
+      } catch (e) { console.warn('잔액을 만들지 못했어요', e); }
+      if (run !== phoneStartToken || me !== myUserId) return;
+      walletRef.on('value', snap => {
+        myPhoneBalance = typeof snap.val() === 'number' ? snap.val() : null;
+        updatePhoneBalance();
+        if (phoneView === 'me') renderPhoneMe();
+      });
+      phoneRefs.push(walletRef);
+
+      const greetRef = database.ref('phone_greetings/' + me);
+      greetRef.on('value', snap => {
+        myGreeting = snap.val();
+        if (phoneView === 'me' && !phoneGreetingRecording) renderPhoneMe();
+      });
+      phoneRefs.push(greetRef);
+
+      const vmRef = database.ref('voicemail/' + me);
+      phoneVmLoaded = false;
+      vmRef.on('value', snap => {
+        const before = new Set(Object.keys(phoneVoicemails));
+        phoneVoicemails = snap.val() || {};
+        if (phoneVmLoaded) {
+          const fresh = Object.keys(phoneVoicemails).filter(k => !before.has(k));
+          if (fresh.length) showWin98Toast(`📮 ${phoneVoicemails[fresh[0]].fromName || '친구'}님이 음성 메시지를 남겼어요`);
+        }
+        phoneVmLoaded = true;
+        updatePhoneBadges();
+        if (phoneView === 'vm') renderPhoneVoicemails();
+      });
+      phoneRefs.push(vmRef);
+      updatePhoneLcd();
+      updatePhoneBalance();
+    }
+
+    function stopBuddyPhone() {
+      if (typeof phoneStartToken === 'number') phoneStartToken++;
+      phoneRefs.forEach(r => { try { r.off(); } catch (e) { } });
+      phoneRefs = [];
+      hangUpPhone(true);
+      cancelGreetingRecording();
+      stopPhonePlayback();
+      myPhoneNumber = null;
+      myPhoneBalance = null;
+      myGreeting = null;
+      phoneVoicemails = {};
+      phoneVmLoaded = false;
+      typedPhoneNum = '';
+      updatePhoneBadges();
+    }
+
+    function updatePhoneBadges() {
+      const unread = Object.values(phoneVoicemails).filter(v => v && !v.listened).length;
+      const badge = document.getElementById('phone-vm-badge');
+      if (badge) {
+        badge.textContent = unread;
+        badge.style.display = unread ? '' : 'none';
+      }
+      const tab = document.getElementById('tab-phone');
+      if (tab) {
+        let tb = tab.querySelector('.phone-tab-badge');
+        if (!tb) {
+          tb = document.createElement('span');
+          tb.className = 'phone-tab-badge';
+          tab.appendChild(tb);
+        }
+        tb.textContent = unread;
+        tb.style.display = unread ? '' : 'none';
+      }
+    }
+
+    /* ---------- 내 폰 화면 ---------- */
+    function renderPhoneMe() {
+      const box = document.getElementById('phone-view-me');
+      if (!box || phoneGreetingRecording) return;
+      const info = myPhoneNumber ? buddyNumberInfo(myPhoneNumber) : null;
+      const greet = myGreeting && myGreeting.audio
+        ? `🎙️ 녹음한 인사말 (${phoneMmSs(myGreeting.duration)})`
+        : '🔈 기본 인사말 (자동 음성으로 읽어 줘요)';
+      box.innerHTML = `
+        <div class="phone-card">
+          <div>내 버디번호</div>
+          <div class="phone-my-num">${myPhoneNumber ? formatBuddyNumber(myPhoneNumber) : '번호 받는 중…'}</div>
+          ${info ? `<div class="phone-my-meaning">"${escapeHtml(info.meaning)}"</div><div class="phone-my-src">${escapeHtml(info.source)}</div>` : ''}
+          <div style="margin-top:6px;">💰 잔액 <b>${myPhoneBalance === null ? '…' : myPhoneBalance.toLocaleString('ko-KR')}원</b> <span style="font-size:9px; color:#6a9a91;">(통화 1번 ${PHONE_CALL_COST}원 · 게임으로 충전 준비 중)</span></div>
+        </div>
+        <div class="phone-card">
+          <div><b>📢 내 인사말</b></div>
+          <div style="margin-top:3px;">${greet}</div>
+          <div class="phone-btn-row">
+            <button class="phone-small-btn" onclick="previewMyGreeting()">▶ 듣기</button>
+            ${myGreeting && myGreeting.audio ? '<button class="phone-small-btn" onclick="deleteMyGreeting()">🗑 기본으로</button>' : ''}
+          </div>
+          <div class="phone-btn-row" id="phone-greet-rec-row">
+            <button class="phone-small-btn rec" onclick="recordMyGreeting()">● 녹음하기</button>
+            <button class="phone-small-btn" onclick="document.getElementById('phone-greeting-file').click()">📁 파일 올리기</button>
+          </div>
+          <input type="file" id="phone-greeting-file" accept="audio/*" style="display:none;" onchange="uploadMyGreeting(event)">
+          <div class="phone-hint">친구가 내 번호로 전화하면 들려줘요. 녹음은 ${PHONE_GREETING_MAX_SEC}초, 파일은 ${PHONE_GREETING_FILE_MAX_SEC}초 · 1MB까지예요.<br>
+            ⚠️ 내 목소리만 올려 주세요. 가수 노래 같은 음원 파일은 저작권 때문에 올리면 안 돼요.</div>
+        </div>`;
+    }
+
+    function defaultGreetingText(nick) {
+      return `안녕하세요, ${nick}입니다. 지금은 전화를 받을 수 없어요. 삐 소리가 나면 메시지를 남겨 주세요.`;
+    }
+
+    function previewMyGreeting() {
+      getPhoneAudioCtx();
+      if (myGreeting && myGreeting.audio) playPhoneAudio(myGreeting.audio);
+      else phoneSpeak(defaultGreetingText(myNickname || myUserId));
+    }
+
+    function deleteMyGreeting() {
+      database.ref('phone_greetings/' + myUserId).remove()
+        .then(() => showWin98Toast('기본 인사말로 바꿨어요'))
+        .catch(() => showWin98Toast('인사말을 지우지 못했어요'));
+    }
+
+    let phoneGreetingController = null;
+    async function recordMyGreeting() {
+      const row = document.getElementById('phone-greet-rec-row');
+      try {
+        stopPhonePlayback();
+        phoneGreetingRecording = true;
+        row.innerHTML = `<span style="flex:1; font-size:11px; color:#c0392b; font-weight:bold;" id="phone-greet-timer">● 녹음 준비 중…</span>`;
+        phoneGreetingController = await startPhoneRecording(PHONE_GREETING_MAX_SEC, sec => {
+          const t = document.getElementById('phone-greet-timer');
+          if (t) t.textContent = `● 녹음 중 ${phoneMmSs(sec)} / ${phoneMmSs(PHONE_GREETING_MAX_SEC)}`;
+          if (sec >= PHONE_GREETING_MAX_SEC) finishGreetingRecording();
+        });
+        row.insertAdjacentHTML('beforeend', `<button class="phone-small-btn" onclick="finishGreetingRecording()">■ 저장</button><button class="phone-small-btn" onclick="cancelGreetingRecording(); renderPhoneMe();">취소</button>`);
+      } catch (e) {
+        phoneGreetingRecording = false;
+        phoneGreetingController = null;
+        renderPhoneMe();
+        showWin98Toast('마이크를 쓸 수 없어요. 브라우저에서 마이크를 허용해 주세요.');
+      }
+    }
+
+    async function finishGreetingRecording() {
+      const c = phoneGreetingController;
+      if (!c) return;
+      phoneGreetingController = null;
+      const result = await c.stop();
+      phoneGreetingRecording = false;
+      if (!result) { renderPhoneMe(); return; }
+      await saveMyGreeting(result.dataUrl, result.duration);
+    }
+
+    function cancelGreetingRecording() {
+      if (phoneGreetingController) phoneGreetingController.cancel();
+      phoneGreetingController = null;
+      phoneGreetingRecording = false;
+    }
+
+    async function saveMyGreeting(dataUrl, duration) {
+      if (!/^data:audio\//.test(dataUrl)) {
+        showWin98Toast('소리 파일만 올릴 수 있어요');
+        renderPhoneMe();
+        return;
+      }
+      try {
+        await database.ref('phone_greetings/' + myUserId).set({ audio: dataUrl, duration: Math.max(1, Math.round(duration)), updatedAt: Date.now() });
+        showWin98Toast('인사말을 저장했어요!');
+      } catch (e) {
+        showWin98Toast('인사말을 저장하지 못했어요 (너무 길거나 큰 파일일 수 있어요)');
+      }
+      renderPhoneMe();
+    }
+
+    function uploadMyGreeting(event) {
+      const input = event.target;
+      const file = input.files && input.files[0];
+      input.value = '';
+      if (!file) return;
+      if (!/^audio\//.test(file.type || '')) { showWin98Toast('소리 파일(mp3, m4a 등)만 올릴 수 있어요'); return; }
+      if (file.size > PHONE_GREETING_FILE_MAX_BYTES) { showWin98Toast('1MB보다 큰 파일은 올릴 수 없어요'); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        const probe = new Audio();
+        let handled = false;
+        const fail = () => { if (!handled) { handled = true; showWin98Toast('이 소리 파일은 재생할 수 없어요'); } };
+        probe.onloadedmetadata = () => {
+          if (handled) return;
+          handled = true;
+          const d = probe.duration;
+          if (!isFinite(d) || d <= 0) { showWin98Toast('파일 길이를 알 수 없어요. 다른 파일로 해 주세요.'); return; }
+          if (d > PHONE_GREETING_FILE_MAX_SEC + 0.5) { showWin98Toast(`${PHONE_GREETING_FILE_MAX_SEC}초보다 긴 파일은 올릴 수 없어요`); return; }
+          saveMyGreeting(dataUrl, Math.min(PHONE_GREETING_FILE_MAX_SEC, Math.max(1, Math.round(d))));
+        };
+        probe.onerror = fail;
+        setTimeout(fail, 8000);
+        probe.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* ---------- 사서함 ---------- */
+    function renderPhoneVoicemails() {
+      const box = document.getElementById('phone-view-vm');
+      if (!box) return;
+      const items = Object.entries(phoneVoicemails).filter(([, v]) => v).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0));
+      if (items.length === 0) {
+        box.innerHTML = '<div class="phone-empty">📮 받은 음성 메시지가 없어요</div>';
+        return;
+      }
+      box.innerHTML = items.map(([key, v]) => {
+        const d = new Date(v.ts || 0);
+        const when = `${d.getMonth() + 1}.${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        return `<div class="phone-vm-item ${v.listened ? '' : 'unread'}">
+          <span class="vm-text">${v.listened ? '' : '🔴 '}${escapeHtml(v.fromName || v.from)}<span class="vm-date">${when} · ${phoneMmSs(v.duration)}</span></span>
+          <button onclick="playVoicemail('${encodeURIComponent(key)}')">▶</button>
+          <button onclick="deleteVoicemail('${encodeURIComponent(key)}')">🗑</button>
+        </div>`;
+      }).join('');
+    }
+
+    function playVoicemail(encKey) {
+      const key = decodeURIComponent(encKey);
+      const v = phoneVoicemails[key];
+      if (!v) return;
+      getPhoneAudioCtx();
+      playPhoneAudio(v.audio);
+      if (!v.listened) database.ref(`voicemail/${myUserId}/${key}/listened`).set(true).catch(() => { });
+    }
+
+    function deleteVoicemail(encKey) {
+      const key = decodeURIComponent(encKey);
+      database.ref(`voicemail/${myUserId}/${key}`).remove().catch(() => showWin98Toast('메시지를 지우지 못했어요'));
+    }
+
+    /* ---------- 친구 번호부 ---------- */
+    async function openPhoneBook() {
+      const box = document.getElementById('phone-book');
+      box.style.display = 'flex';
+      box.innerHTML = '<div class="phone-empty">불러오는 중…</div>';
+      try {
+        const friendIds = Object.keys((await database.ref('user_friends/' + myUserId).once('value')).val() || {});
+        const rows = await Promise.all(friendIds.map(async fid => {
+          const [num, nick] = await Promise.all([
+            database.ref('user_phone/' + fid).once('value').then(s => s.val()).catch(() => null),
+            database.ref('global_users/' + fid + '/nickname').once('value').then(s => s.val()).catch(() => null)
+          ]);
+          return { fid, num, nick: nick || fid };
+        }));
+        const withNum = rows.filter(r => r.num).sort((a, b) => a.nick.localeCompare(b.nick, 'ko'));
+        box.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:bold; color:#2e6e63; padding:4px 2px;">
+            <span>👥 친구 번호부</span><span style="cursor:pointer;" onclick="closePhoneBook()">✕</span></div>`
+          + (withNum.length ? withNum.map(r => `<div class="phone-book-row" onclick="dialFromBook('${r.num}')">
+              <b>${escapeHtml(r.nick)}</b><span>${formatBuddyNumber(r.num)}</span></div>`).join('')
+            : '<div class="phone-empty">번호가 있는 친구가 아직 없어요.<br>친구가 메신저에 한 번 들어오면 번호가 생겨요.</div>');
+      } catch (e) {
+        box.innerHTML = '<div class="phone-empty">번호부를 불러오지 못했어요</div>';
+      }
+    }
+
+    function closePhoneBook() {
+      const box = document.getElementById('phone-book');
+      if (box) box.style.display = 'none';
+    }
+
+    function dialFromBook(num) {
+      if (!/^[0-9]{8}$/.test(num)) return;
+      typedPhoneNum = '000' + num;
+      closePhoneBook();
+      showPhoneView('dial');
+      updatePhoneLcd();
+    }
+
+    /* ---------- 통화 ---------- */
+    function setCallUI(opts) {
+      const o = Object.assign({}, opts);
+      if ('number' in o) document.getElementById('phone-call-number').textContent = o.number;
+      if ('name' in o) document.getElementById('phone-call-name').textContent = o.name;
+      if ('status' in o) document.getElementById('phone-call-status').textContent = o.status;
+      if ('icon' in o) document.getElementById('phone-call-icon').textContent = o.icon;
+      if ('ringing' in o) document.getElementById('phone-call-icon').classList.toggle('ringing', !!o.ringing);
+      if ('actions' in o) document.getElementById('phone-call-actions').innerHTML = o.actions;
+    }
+
+    async function makePhoneCall() {
+      if (phoneInCall) return;
+      const target = dialTarget();
+      if (!target) {
+        flashPhoneLcd('000-XXXX-XXXX 로 눌러 주세요');
+        return;
+      }
+      // 버튼을 누른 이 순간에 소리를 깨워 둬야 아이폰에서도 소리가 나요
+      getPhoneAudioCtx();
+      if ('speechSynthesis' in window) {
+        try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { }
+      }
+      const token = ++phoneCallToken;
+      const alive = () => token === phoneCallToken;
+      phoneInCall = true;
+      closePhoneBook();
+      document.getElementById('phone-call-overlay').style.display = 'flex';
+      setCallUI({ number: formatBuddyNumber(target), name: '', status: '연결 중…', icon: '📞', ringing: false, actions: '' });
+
+      try {
+        if (target === myPhoneNumber) {
+          setCallUI({ status: '내 번호예요!\n[내 폰]에서 인사말을 들어 볼 수 있어요.' });
+          await phoneSleep(2200);
+          if (alive()) endPhoneCall();
+          return;
+        }
+        const owner = (await database.ref('phone_numbers/' + target).once('value')).val();
+        if (!alive()) return;
+        if (!owner) {
+          setCallUI({ icon: '📵', status: '지금 거신 번호는\n없는 번호입니다.' });
+          await Promise.all([phoneBusyTone(3), phoneSpeak('지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.')]);
+          if (alive()) endPhoneCall();
+          return;
+        }
+        const [isFriend, nick] = await Promise.all([
+          database.ref(`user_friends/${myUserId}/${owner}`).once('value').then(s => s.val() === true).catch(() => false),
+          database.ref('global_users/' + owner + '/nickname').once('value').then(s => s.val() || owner).catch(() => owner)
+        ]);
+        if (!alive()) return;
+        setCallUI({ name: nick });
+        if (!isFriend) {
+          setCallUI({ icon: '📵', status: '버디버디 친구에게만\n전화할 수 있어요.' });
+          await phoneBusyTone(3);
+          if (alive()) endPhoneCall();
+          return;
+        }
+        if (myPhoneBalance === null || myPhoneBalance < PHONE_CALL_COST) {
+          setCallUI({ icon: '💸', status: `잔액이 부족해요.\n(통화 1번 ${PHONE_CALL_COST}원 · 게임으로 충전 준비 중)` });
+          await phoneSleep(2500);
+          if (alive()) endPhoneCall();
+          return;
+        }
+
+        // 1) 통화연결음
+        setCallUI({ status: '뚜르르… 뚜르르…', ringing: true });
+        await phoneRingback(2);
+        if (!alive()) return;
+
+        // 2) 연결 → 요금
+        try {
+          await database.ref('phone_wallet/' + myUserId + '/balance').set(myPhoneBalance - PHONE_CALL_COST);
+        } catch (e) {
+          setCallUI({ ringing: false, icon: '⚠️', status: '통화를 연결하지 못했어요.\n잠시 후 다시 걸어 주세요.' });
+          await phoneSleep(2000);
+          if (alive()) endPhoneCall();
+          return;
+        }
+        setCallUI({ ringing: false, icon: '🔊', status: '연결됐어요\n인사말을 듣는 중…' });
+
+        // 3) 친구 인사말
+        let greeting = null;
+        try { greeting = (await database.ref('phone_greetings/' + owner).once('value')).val(); } catch (e) { greeting = null; }
+        if (!alive()) return;
+        if (greeting && greeting.audio) await playPhoneAudio(greeting.audio);
+        else await phoneSpeak(defaultGreetingText(nick));
+        if (!alive()) return;
+
+        // 4) 삐 → 음성사서함
+        setCallUI({ icon: '📮', status: '삐—' });
+        await phoneBeep();
+        if (!alive()) return;
+        startVoicemailRecording(owner, nick, token);
+      } catch (e) {
+        console.error(e);
+        if (alive()) {
+          setCallUI({ ringing: false, icon: '⚠️', status: '통화 중 문제가 생겼어요.' });
+          await phoneSleep(1800);
+          if (alive()) endPhoneCall();
+        }
+      }
+    }
+
+    async function startVoicemailRecording(owner, nick, token) {
+      const alive = () => token === phoneCallToken;
+      phoneVmDraft = null;
+      try {
+        setCallUI({ status: '메시지를 남겨 주세요\n🎙️ 마이크 준비 중…', actions: '' });
+        phoneRecorder = await startPhoneRecording(PHONE_VM_MAX_SEC, sec => {
+          if (!alive()) return;
+          setCallUI({ status: `● 녹음 중 ${phoneMmSs(sec)} / ${phoneMmSs(PHONE_VM_MAX_SEC)}` });
+          if (sec >= PHONE_VM_MAX_SEC) finishVoicemailRecording(owner, nick, token);
+        });
+        if (!alive()) { phoneRecorder.cancel(); phoneRecorder = null; return; }
+        setCallUI({ actions: `<button class="phone-small-btn rec" id="phone-vm-stop">■ 녹음 끝</button>` });
+        document.getElementById('phone-vm-stop').onclick = () => finishVoicemailRecording(owner, nick, token);
+      } catch (e) {
+        phoneRecorder = null;
+        if (!alive()) return;
+        setCallUI({ status: '마이크를 쓸 수 없어서\n메시지를 남길 수 없어요.', actions: '' });
+      }
+    }
+
+    async function finishVoicemailRecording(owner, nick, token) {
+      const rec = phoneRecorder;
+      if (!rec) return;
+      phoneRecorder = null;
+      const result = await rec.stop();
+      if (token !== phoneCallToken || !result) return;
+      phoneVmDraft = { owner, nick, token, ...result };
+      setCallUI({
+        status: `녹음 완료 (${phoneMmSs(result.duration)})`,
+        actions: `<button class="phone-small-btn" id="phone-vm-listen">▶ 들어보기</button>
+                  <button class="phone-small-btn" id="phone-vm-retry">↺ 다시</button>
+                  <button class="phone-small-btn rec" id="phone-vm-send">📮 보내기</button>`
+      });
+      document.getElementById('phone-vm-listen').onclick = () => playPhoneAudio(result.dataUrl);
+      document.getElementById('phone-vm-retry').onclick = () => { stopPhonePlayback(); startVoicemailRecording(owner, nick, token); };
+      document.getElementById('phone-vm-send').onclick = () => sendVoicemail();
+    }
+
+    async function sendVoicemail() {
+      const draft = phoneVmDraft;
+      if (!draft || draft.token !== phoneCallToken) return;
+      stopPhonePlayback();
+      setCallUI({ status: '보내는 중…', actions: '' });
+      try {
+        await database.ref('voicemail/' + draft.owner).push({
+          from: myUserId,
+          fromName: String(myNickname || myUserId).slice(0, 40),
+          audio: draft.dataUrl,
+          duration: Math.min(PHONE_VM_MAX_SEC, Math.max(1, draft.duration)),
+          ts: Date.now(),
+          listened: false
+        });
+        phoneVmDraft = null;
+        setCallUI({ icon: '✅', status: `${draft.nick}님에게\n음성 메시지를 남겼어요!` });
+        await phoneSleep(1800);
+        if (draft.token === phoneCallToken) endPhoneCall();
+      } catch (e) {
+        setCallUI({ status: '메시지를 보내지 못했어요.', actions: `<button class="phone-small-btn rec" id="phone-vm-send">📮 다시 보내기</button>` });
+        document.getElementById('phone-vm-send').onclick = () => sendVoicemail();
+      }
+    }
+
+    function endPhoneCall() {
+      phoneCallToken++;
+      phoneInCall = false;
+      stopPhoneTones();
+      stopPhonePlayback();
+      if (phoneRecorder) { phoneRecorder.cancel(); phoneRecorder = null; }
+      phoneVmDraft = null;
+      const overlay = document.getElementById('phone-call-overlay');
+      if (overlay) overlay.style.display = 'none';
+      updatePhoneLcd();
+    }
+
+    function hangUpPhone(silent) {
+      if (!phoneInCall) {
+        if (!silent) endPhoneCall();
+        return;
+      }
+      endPhoneCall();
+    }
+
+    /* ---------- 연결: 로그인/로그아웃/프로필 ---------- */
+    (function wireBuddyPhone() {
+      const originalEnter = window.enterMainMessenger;
+      window.enterMainMessenger = function () {
+        const result = originalEnter.apply(this, arguments);
+        startBuddyPhone();
+        return result;
+      };
+      ['logout', 'resetToLoginScreen'].forEach(name => {
+        const original = window[name];
+        if (typeof original !== 'function') return;
+        window[name] = function () {
+          stopBuddyPhone();
+          return original.apply(this, arguments);
+        };
+      });
+      const originalToggle = window.toggleBuddyPhone;
+      window.toggleBuddyPhone = function (show) {
+        if (!show) {
+          hangUpPhone(true);
+          cancelGreetingRecording();
+          stopPhonePlayback();
+        }
+        const result = originalToggle.apply(this, arguments);
+        if (show) {
+          updatePhoneLcd();
+          updatePhoneBalance();
+          if (phoneView !== 'dial') showPhoneView(phoneView);
+        }
+        return result;
+      };
+      // 내 프로필 / 친구 정보 보기에 버디번호
+      const originalOpenProfile = window.openProfileModal;
+      if (typeof originalOpenProfile === 'function') {
+        window.openProfileModal = function () {
+          const result = originalOpenProfile.apply(this, arguments);
+          const el = document.getElementById('edit-buddy-number');
+          if (el) {
+            const info = myPhoneNumber ? buddyNumberInfo(myPhoneNumber) : null;
+            el.value = myPhoneNumber ? formatBuddyNumber(myPhoneNumber) + (info ? ` (${info.meaning})` : '') : '번호 받는 중…';
+          }
+          return result;
+        };
+      }
+      const originalViewInfo = window.onContextMenuViewInfo;
+      if (typeof originalViewInfo === 'function') {
+        window.onContextMenuViewInfo = function () {
+          const target = selectedFriendForContext && selectedFriendForContext.id;
+          const result = originalViewInfo.apply(this, arguments);
+          const el = document.getElementById('view-friend-buddy-number');
+          if (el && target) {
+            el.value = '…';
+            database.ref('user_phone/' + target).once('value').then(s => {
+              const num = s.val();
+              const info = num ? buddyNumberInfo(num) : null;
+              el.value = num ? formatBuddyNumber(num) + (info ? ` (${info.meaning})` : '') : '아직 없음';
+            }).catch(() => { el.value = '아직 없음'; });
+          }
+          return result;
+        };
+      }
     })();
   </script>
 </body>
